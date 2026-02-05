@@ -1,4 +1,4 @@
-# データの構造を書く
+# データベース側の構造を書く
 from datetime import datetime, timezone
 from sqlalchemy import (Column, ForeignKey, Integer, String, DateTime, Date)
 from .database import Base
