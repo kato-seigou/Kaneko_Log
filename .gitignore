@@ -10,4 +10,4 @@ wheels/
 .venv
 
 # 設計書
-.01_design_documents/
+01_design_documents/
