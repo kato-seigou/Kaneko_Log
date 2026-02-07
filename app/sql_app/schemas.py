@@ -52,7 +52,7 @@ class ListenLogCreate(BaseModel):
     listened_at: datetime.datetime
     
 class ListenLogUpdate(BaseModel):
-    discography_id: Optional[int]
+    discography_id: Optional[int] = None
     comment: Optional[str] = Field(default=None, max_length=50)
     listened_at: Optional[datetime.datetime] = None
     
