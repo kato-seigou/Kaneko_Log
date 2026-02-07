@@ -16,8 +16,11 @@ from . import models
 
 # 設定
 # TODO この辺一切わからない
+# TODO: SECRET_KEYは変更する方が良い
 SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE_ME__SET__ENV_SECRET_KEY")
+# 署名アルゴリズムは特に理由がなければ変更しない
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+# ログイン状態の有効期限（ここでは60分）
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
 if SECRET_KEY == "CHANGE_ME__SET_ENV_SECRET_KEY":
@@ -61,6 +64,7 @@ def decode_access_token(token: str) -> dict[str, Any]:
 # FastAPI依存: ログインユーザー取得
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
+# このリクエストを送ってきたのは誰かを確定する関数
 def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
