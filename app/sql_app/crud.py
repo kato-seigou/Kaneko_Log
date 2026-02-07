@@ -80,6 +80,13 @@ def update_log(db: Session, user_id: int, log_id: int, log_update: schemas.Liste
     if db_log is None or db_log.user_id != user_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="log not found.")
     
+    if log_update.discography_id is not None:
+        disco = db.query(models.Discography).filter(models.Discography.discography_id == log_update.discography_id).first()
+        if disco is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="discography not found.")
+        db_log.discography_id = log_update.discography_id
+        
+    
     if log_update.comment is not None:
         db_log.comment = log_update.comment
     if log_update.listened_at is not None:
