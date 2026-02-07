@@ -42,6 +42,7 @@ class ListenLog(Base):
         ForeignKey("discographies.discography_id", ondelete="RESTRICT"), 
         nullable=False
         )
+    comment = Column(String(50), nullable=True, unique=False)
     listened_at = Column(
         DateTime(timezone=True),
         nullable=False,
