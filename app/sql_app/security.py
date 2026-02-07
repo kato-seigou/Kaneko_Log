@@ -24,7 +24,7 @@ ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
 if SECRET_KEY == "CHANGE_ME__SET_ENV_SECRET_KEY":
-    pass
+    raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
 
 # パスワード関連
 # ハッシュ化と認証
@@ -53,7 +53,7 @@ def create_access_token(
     )
     to_encode.update({"exp": expire})
     
-    encode_jwt = jwt.encode(to_encode, algorithm=ALGORITHM)
+    encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encode_jwt
 
 def decode_access_token(token: str) -> dict[str, Any]:
@@ -98,5 +98,3 @@ def get_current_user(
     if user is None:
         raise credentials_exception
     return user
-
-
