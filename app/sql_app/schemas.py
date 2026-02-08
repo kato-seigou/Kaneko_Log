@@ -5,6 +5,11 @@ from typing import Optional
 
 # FastAPI側のデータ構造を定義する
 
+### 認証関連
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 ### user関連
 class UserBase(BaseModel):
     # UserCreateをUserReadで継承するとresに
