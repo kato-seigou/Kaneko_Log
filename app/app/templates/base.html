@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Kaneko Ayano App{% endblock %}</title>
+</head>
+<body>
+    <header style="background: pink;">
+        <a href="/ui/login">Login</a> |
+        <a href="/ui/discographies">Discographies</a> |
+        <a href="/ui/logs">Logs</a> |
+        <a href="/ui/logout">Logout</a>
+    </header>
+
+    <main style="padding: 16px;">
+        {%block content%}{% endblock%}
+    </main>
+</body>
+</html>

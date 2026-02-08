@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<h1>ログイン（デモ）</h1>
+
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<form method="post" action="/ui/login">
+  <div>
+    <label>login_id</label><br />
+    <input name="login_id" required />
+  </div>
+
+  <div style="margin-top: 8px;">
+    <label>password</label><br />
+    <input type="password" name="password" required />
+  </div>
+
+  <div style="margin-top: 12px;">
+    <button type="submit">ログイン</button>
+  </div>
+</form>
+<p style="margin-top:12px;"><a href="/ui/register">新規登録</a></p>
+{% endblock %}

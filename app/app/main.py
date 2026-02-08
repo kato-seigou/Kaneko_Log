@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, engine
 from .routers import auth, discography, logs
+from .routers.ui import auth as ui_auth
+from .routers.ui import logs as ui_logs
 
 # DBテーブル作成
 Base.metadata.create_all(bind=engine)
@@ -20,6 +22,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(discography.router)
 app.include_router(logs.router)
+app.include_router(ui_auth.router)
+app.include_router(ui_logs.router)
 
 @app.get("/")
 def root():
