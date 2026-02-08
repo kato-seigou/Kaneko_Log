@@ -5,6 +5,8 @@ from fastapi import HTTPException, status
 
 from . import models, schemas, security
 
+# ここでDBの操作を行う
+
 # GET系
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).order_by(models.User.user_id).offset(skip).limit(limit).all()
