@@ -11,8 +11,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from .settings import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from .database import get_db
 from . import models
+
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
 
 # 設定
 # TODO この辺一切わからない
@@ -29,17 +33,29 @@ if SECRET_KEY == "CHANGE_ME__SET__ENV_SECRET_KEY":
 # パスワード関連
 # ハッシュ化と認証
 pwd_context = CryptContext(
-    schemes=["bcrypt"], deprecated="auto"
+    schemes=["bcrypt_sha256"], deprecated="auto"
 )
+
+def _truncate_to_72_bytes(s: str) -> str:
+    b = s.encode("utf-8")
+    if len(b) <= 72:
+        return s
+    truncated = b[:72]
+    return truncated.decode("utf-8", errors="ignore")
 
 def hash_password(plain_password: str) -> str:
     # 平文パスワードをハッシュ化して返す（DB保存用）
-    return pwd_context.hash(plain_password)
+    b = plain_password.encode("utf-8")
+    print("PW bytes:", len(b), repr(plain_password))
+    safe = _truncate_to_72_bytes(plain_password)
+    return pwd_context.hash(safe)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     # 平文パスワードが、保存済みハッシュと一致するか検証
-    return pwd_context.verify(plain_password, hashed_password)
-
+    safe = _truncate_to_72_bytes(plain_password)
+    return pwd_context.verify(safe, hashed_password)
+    
+    
 # JWT（トークン）
 def create_access_token(
     data: dict[str, Any],
@@ -72,7 +88,7 @@ def authenticate_user(login_id: str, password: str, db: Session) -> Optional[mod
         return None
     if not verify_password(password, user.password_hash):
         return None
-    return None
+    return user
 
 # このリクエストを送ってきたのは誰かを確定する関数
 def get_current_user(
