@@ -37,7 +37,7 @@ class DiscographyType(str, Enum):
     
 class DiscographyCreate(BaseModel):
     discography_title: str = Field(min_length=1)
-    discography_num: int = Field(min_length=1) # ディスコグラフィの収録曲数
+    discography_num: int = Field(ge=1) # ディスコグラフィの収録曲数
     discography_type: DiscographyType
     released_date: datetime.date
     playtime_seconds: int = Field(ge=1)
