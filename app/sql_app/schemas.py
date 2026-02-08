@@ -51,7 +51,7 @@ class DiscographyRead(DiscographyCreate):
 
 ### ログ関連
 class ListenLogCreate(BaseModel):
-    user_id: int
+    # user_id: int
     discography_id: int
     comment: Optional[str] = Field(default=None, max_length=50)
     listened_at: datetime.datetime
