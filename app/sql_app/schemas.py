@@ -18,7 +18,7 @@ class UserBase(BaseModel):
     login_id: str = Field(max_length=10)
     
 class UserCreate(UserBase):
-    password: str = Field(min_length=8, max_length=12)
+    password: str = Field(min_length=8, max_length=72)
     
 class UserRead(UserBase):
     # 表示用
