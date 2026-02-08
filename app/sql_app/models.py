@@ -1,6 +1,6 @@
 # データベース側の構造を書く
 from datetime import datetime, timezone
-from sqlalchemy import (Column, ForeignKey, Integer, String, DateTime, Date)
+from sqlalchemy import (Column, ForeignKey, Integer, String, DateTime, Date, Boolean)
 from .database import Base
 
 class User(Base):
@@ -14,6 +14,7 @@ class User(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc)
     )
+    is_admin = Column(Boolean, nullable=False, default=False)
     
 class Discography(Base):
     __tablename__ = "discographies"
