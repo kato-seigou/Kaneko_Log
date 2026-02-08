@@ -23,7 +23,7 @@ ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 # ログイン状態の有効期限（ここでは60分）
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
-if SECRET_KEY == "CHANGE_ME__SET_ENV_SECRET_KEY":
+if SECRET_KEY == "CHANGE_ME__SET__ENV_SECRET_KEY":
     raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
 
 # パスワード関連
@@ -46,6 +46,7 @@ def create_access_token(
     expires_delta: Optional[timedelta] = None,
 ) -> str:
     # JWTを作成して返す
+    # expire_deltaはこのトークンの有効期限をどれくらいまでにするかを決める
     to_encode = data.copy()
     
     expire = datetime.now(timezone.utc) + (
@@ -63,6 +64,15 @@ def decode_access_token(token: str) -> dict[str, Any]:
 
 # FastAPI依存: ログインユーザー取得
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+# ログイン時に、IDとパスワードが正しいかを確認してUserを返すための関数
+def authenticate_user(login_id: str, password: str, db: Session) -> Optional[models.User]:
+    user = db.query(models.User).filter(models.User.login_id==login_id).first()
+    if user is None:
+        return None
+    if not verify_password(password, user.password_hash):
+        return None
+    return None
 
 # このリクエストを送ってきたのは誰かを確定する関数
 def get_current_user(
