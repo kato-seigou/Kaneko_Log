@@ -40,20 +40,20 @@ def new_discography_page(
 def create_discographies_action(
     request: Request,
     discography_title: str = Form(...),
-    discography_num: int = Form(...),
+    discography_num: str | None = Form(None),
     discography_type: str = Form(...),
     released_date: date = Form(...),
-    playtime_seconds: int = Form(...),
+    playtime_seconds: str | None = Form(None),
     db: Session = Depends(get_db),
     admin_user: models.User = Depends(require_admin_from_cookie)
 ):
     try:
         discography_in = schemas.DiscographyCreate(
             discography_title=discography_title,
-            discography_num=discography_num,
+            discography_num=int(discography_num) if discography_num else None,
             discography_type=discography_type,
             released_date=released_date,
-            playtime_seconds=playtime_seconds
+            playtime_seconds= int(playtime_seconds) if playtime_seconds else None
         )
         crud.create_discography(db=db, discography=discography_in)
     except Exception as e:

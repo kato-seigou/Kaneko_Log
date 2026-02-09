@@ -9,11 +9,11 @@
     <header style="background: white;">
         <a href="/ui/login">Login</a> |
         <a href="/ui/discographies">Discographies</a> |
-        <a href="/ui/logs">Logs</a> |
+        <a href="/ui/logs">My Logs</a> |
         <a href="/ui/timeline">Timeline</a> |
         <a href="/ui/logout">Logout</a>
         {% if user and user.is_admin %}
-            | <a href="/ui/discographies/new">Discography 登録</a>
+            | <a href="/ui/discographies/new">新規ディスコグラフィ登録</a>
         {% endif %}
     </header>
 

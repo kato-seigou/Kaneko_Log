@@ -23,10 +23,10 @@ class Discography(Base):
     __tablename__ = "discographies"
     discography_id = Column(Integer, primary_key=True)
     discography_title = Column(String, nullable=False, unique=True, index=True)
-    discography_num = Column(Integer, nullable=False, unique=False)
+    discography_num = Column(Integer, nullable=True, unique=False)
     discography_type = Column(String, nullable=False, unique=False)
     released_date = Column(Date, nullable=False, unique=False)
-    playtime_seconds = Column(Integer, nullable=False, unique=False)
+    playtime_seconds = Column(Integer, nullable=True, unique=False)
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
