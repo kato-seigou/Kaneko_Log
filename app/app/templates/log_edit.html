@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ログ編集</title>
+</head>
+<body>
+  <h1>ログ編集</h1>
+
+  {% if error %}
+    <p style="color:red;">{{ error }}</p>
+  {% endif %}
+
+  <form method="post" action="/ui/logs/{{ log.log_id }}/edit">
+    <div>
+      <label>ディスコグラフィ</label>
+      <select name="discography_id" required>
+        {% for d in discographies %}
+          <option value="{{ d.discography_id }}"
+            {% if d.discography_id == log.discography_id %}selected{% endif %}>
+            {{ d.discography_title }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label>コメント（任意）</label>
+      <textarea name="comment" rows="3" maxlength="50">{{ log.comment or '' }}</textarea>
+    </div>
+
+    <div>
+      <label>聴いた日時</label>
+      <input
+        type="datetime-local"
+        name="listened_at"
+        required
+        value="{{ log.listened_at.strftime('%Y-%m-%dT%H:%M') }}"
+      >
+    </div>
+
+    <button type="submit">更新</button>
+    <a href="/ui/logs">戻る</a>
+  </form>
+
+  <hr>
+
+  <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+        onsubmit="return confirm('このログを削除します。よろしいですか？');">
+    <button type="submit">削除</button>
+  </form>
+</body>
+</html>
