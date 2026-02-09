@@ -3,32 +3,33 @@
 {% block content %}
 <h1>聞いたログ</h1>
 
-<p>ログイン中: {{user.display_name}}（ID: {{user.login_id}}）</p>
+<p>ログイン中: {{ user.display_name }}（ID: {{ user.login_id }}）</p>
 
-<table border="1" cellpadding="6">
-    <thread>
-        <th>
-            <tr>log_id</th>
-            <th>discography_id</th>
-            <th>comment</th>
-            <th>listened_at</th>
-            <th>created_at</th>
-        </th>
-    </thread>
-    <tbody>
-        {% for log in logs%}
-        <tr>
-            <td>{{log.log_id}}</td>
-            <td>{{log.discography_id}}</td>
-            <td>{{log.comment}}</td>
-            <td>{{log.listened_at}}</td>
-            <td>{{log.created_at}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+<table border="1" cellpadding="6", style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr>
+      <th>log_id</th>
+      <th>discography_id</th>
+      <th>comment</th>
+      <th>listened_at</th>
+      <th>created_at</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for log in logs %}
+      <tr>
+        <td>{{ log.log_id }}</td>
+        <td>{{ log.discography.discography_title }}</td>
+        <td>{{ log.comment }}</td>
+        <td>{{ log.listened_at }}</td>
+        <td>{{ log.created_at }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
 </table>
 
 <p style="margin-top:12px;">
-    <a href="/ui/logs/new">新規作成へ（次で作る）</a>
+  <a href="/ui/logs/new">新規作成へ</a>
 </p>
 {% endblock %}
