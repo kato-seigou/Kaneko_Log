@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Discographies{% endblock %}
+
+{% block content %}
+<h1>ディスコグラフィ一覧</h1>   
+
+<table border="1" cellpadding="6">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>種別</th>
+      <th>発売日</th>
+      <th>再生時間</th>
+      <th>曲数</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in discographies %}
+      <tr>
+        <td>{{ d.discography_title }}</td>
+        <td>{{ d.discography_type }}</td>
+        <td>{{ d.released_date }}</td>
+        <td>{{ d.playtime_seconds }} 秒</td>
+        <td>{{ d.discography_num }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
