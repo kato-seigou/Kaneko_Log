@@ -1,4 +1,5 @@
 # UI側のログイン必須を実装
+### つまり、Dependencyの実装
 # Cookie -> current_user
 # security.get_current_userはOAuth2依存なので、UIように別Dependencyを用意する
 from __future__ import annotations
@@ -39,3 +40,13 @@ def get_current_user_from_cookie(
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     
     return user
+
+def require_admin_from_cookie(
+    current_user: models.User = Depends(get_current_user_from_cookie)
+) -> models.User:
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required"
+        )
+    return current_user
