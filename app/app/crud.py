@@ -1,6 +1,7 @@
 from typing import Optional
 
 from sqlalchemy.orm import Session , joinedload
+from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 
 from . import models, schemas, security
@@ -10,6 +11,10 @@ from . import models, schemas, security
 # GET系
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).order_by(models.User.user_id).offset(skip).limit(limit).all()
+
+def get_discography(db: Session, discography_id: int):
+    disco = db.query(models.Discography).filter(models.Discography.discography_id == discography_id).first()
+    return disco
 
 def get_discographies(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Discography).order_by(models.Discography.released_date).offset(skip).limit(limit).all()
@@ -123,6 +128,34 @@ def update_log(db: Session, user_id: int, log_id: int, log_update: schemas.Liste
     db.refresh(db_log)
     return db_log
 
+def update_discography(db: Session, discography_id: int, disco_update: schemas.DiscographyUpdate):
+    disco = get_discography(db, discography_id)
+    
+    if disco is None:
+        raise HTTPException(status_code=404, detail="discography not found")
+    
+    if disco_update.discography_title is not None:
+        exists = db.query(models.Discography).filter(
+            models.Discography.discography_title == disco_update.discography_title,
+            models.Discography.discography_id != discography_id
+        ).first()
+        if exists:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="discography_title already used")
+        disco.discography_title = disco_update.discography_title
+        
+    if disco_update.discography_num is not None:
+        disco.discography_num = disco_update.discography_num
+    if disco_update.discography_type is not None:
+        disco.discography_type = disco_update.discography_type
+    if disco_update.released_date is not None:
+        disco.released_date = disco_update.released_date
+    if disco_update.playtime_seconds is not None:
+        disco.playtime_seconds = disco_update.playtime_seconds
+
+    db.commit()
+    db.refresh(disco)
+    return disco
+
 # DELETE
 def delete_log(db: Session, user_id: int, log_id: int):
     db_log = (
@@ -135,4 +168,23 @@ def delete_log(db: Session, user_id: int, log_id: int):
     
     db.delete(db_log)
     db.commit()
+    return True
+
+def delete_discography(db: Session, discography_id: int):
+    disco = get_discography(db, discography_id)
+    if disco is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Discography not found."
+        )
+
+    try:
+        db.delete(disco)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This discography is referenced by logs and cannot be deleted."
+        )
     return True

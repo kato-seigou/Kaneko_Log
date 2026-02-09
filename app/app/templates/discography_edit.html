@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Discography 編集{% endblock %}
+
+{% block content %}
+<h1>ディスコグラフィ編集</h1>
+
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+{# 存在しないIDで来た場合 #}
+{% if discography is none %}
+  <p>編集対象が見つかりません。</p>
+  <p style="margin-top:12px;">
+    <a href="/ui/discographies">一覧へ戻る</a>
+  </p>
+{% else %}
+
+  <form method="post" action="/ui/discographies/{{ discography.discography_id }}/edit">
+    <div>
+      <label>タイトル</label><br />
+      <input name="discography_title" required value="{{ discography.discography_title }}" />
+    </div>
+
+    <div style="margin-top:8px;">
+      <label>種別</label><br />
+      <select name="discography_type" required>
+        <option value="">選択してください</option>
+        <option value="Album"  {% if discography.discography_type == "Album" %}selected{% endif %}>アルバム</option>
+        <option value="Single" {% if discography.discography_type == "Single" %}selected{% endif %}>シングル</option>
+        <option value="EP"     {% if discography.discography_type == "EP" %}selected{% endif %}>EP</option>
+        <option value="Movie"  {% if discography.discography_type == "Movie" %}selected{% endif %}>映像</option>
+      </select>
+    </div>
+
+    <div style="margin-top:8px;">
+      <label>発売日</label><br />
+      {# date型なら通常これで YYYY-MM-DD になる #}
+      <input type="date" name="released_date" required value="{{ discography.released_date }}" />
+    </div>
+
+    <div style="margin-top:8px;">
+      <label>再生時間（秒）</label><br />
+      <input
+        type="number"
+        name="playtime_seconds"
+        min="1"
+        value="{% if discography.playtime_seconds is not none %}{{ discography.playtime_seconds }}{% endif %}"
+      />
+    </div>
+
+    <div style="margin-top:8px;">
+      <label>曲数</label><br />
+      <input
+        type="number"
+        name="discography_num"
+        min="1"
+        required
+        value="{{ discography.discography_num }}"
+      />
+    </div>
+
+    <div style="margin-top:12px;">
+      <button type="submit">更新</button>
+    </div>
+  </form>
+
+    {% if user and user.is_admin %}
+        <form
+        method="post"
+        action="/ui/discographies/{{ discography.discography_id }}/delete"
+        style="margin-top:16px;"
+        onsubmit="return confirm('本当に削除しますか？');"
+        >
+        <button type="submit" style="color:red;">
+            削除
+        </button>
+        </form>
+    {% endif %}
+
+  <p style="margin-top:12px;">
+    <a href="/ui/discographies">一覧へ戻る</a>
+  </p>
+
+{% endif %}
+{% endblock %}

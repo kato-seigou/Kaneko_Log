@@ -41,6 +41,13 @@ class DiscographyCreate(BaseModel):
     discography_type: DiscographyType
     released_date: datetime.date
     playtime_seconds: Optional[int] = Field(default=None, ge=1)
+    
+class DiscographyUpdate(BaseModel):
+    discography_title: Optional[str] = Field(default=None, min_length=1)
+    discography_num: Optional[int] = Field(default=None, ge=1)
+    discography_type: Optional[DiscographyType] = None
+    released_date: Optional[datetime.date] = None
+    playtime_seconds: Optional[int] = Field(default=None, ge=1)
 
 class DiscographyRead(DiscographyCreate):
     discography_id: int
