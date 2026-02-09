@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Timeline{% endblock %}
+{% block content %}
+<h1>タイムライン</h1>
+
+<div style="max-width: 720px; margin: 0 auto;">
+  {% for log in logs %}
+    <div style="border: 1px solid #ddd; border-radius: 12px; padding: 12px 14px; margin: 12px 0;">
+      <div style="display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;">
+        <strong>{{ log.user.display_name or 'NoName' }}</strong>
+        <span style="color: #666;">@{{ log.user.login_id }}</span>
+        <span style="color: #999; margin-left: auto;">
+          {{ log.listened_at.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+      </div>
+
+      <div style="margin-top: 8px; font-size: 1.05rem;">
+        🎧 {{ log.discography.discography_title }}
+      </div>
+
+      <div style="margin-top: 8px; white-space: pre-wrap; color: #222;">
+        {{ log.comment or '' }}
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if has_more %}
+    <div style="text-align: center; margin: 16px 0;">
+      <a href="/ui/timeline?skip={{ next_skip }}&limit={{ limit }}"
+         style="display: inline-block; padding: 10px 14px; border: 1px solid #ddd; border-radius: 999px; text-decoration: none;">
+        もっと見る
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+        

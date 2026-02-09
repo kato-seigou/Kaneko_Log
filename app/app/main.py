@@ -6,6 +6,7 @@ from .routers import auth, discography, logs
 from .routers.ui import auth as ui_auth
 from .routers.ui import logs as ui_logs
 from .routers.ui import discographies as ui_disco
+from .routers.ui import timeline as ui_timeline
 
 # DBテーブル作成
 Base.metadata.create_all(bind=engine)
@@ -26,6 +27,7 @@ app.include_router(logs.router)
 app.include_router(ui_auth.router)
 app.include_router(ui_logs.router)
 app.include_router(ui_disco.router)
+app.include_router(ui_timeline.router)
 
 @app.get("/")
 def root():

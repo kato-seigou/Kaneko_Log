@@ -18,7 +18,8 @@
 
     <div style="margin-top:8px;">
         <label>listened_at</label><br />
-        <input type="datetime-local" name="listened_at" required/>
+        <input type="datetime-local" name="listened_at" 
+        max="{{ now.strftime('%Y-%m-%dT%H:%M') }}" required/>
     </div>
 
     <div style="margin-top:8px;">

@@ -38,7 +38,11 @@ def new_log_page(
     
     return templates.TemplateResponse(
         "log_new.html",
-        {"request": request, "user": current_user, "discographies": discographies}
+        {
+            "request": request, 
+            "user": current_user, 
+            "discographies": discographies,
+            "now": datetime.now()}
     )
     
 @router.get("/logs/{log_id}/edit")
@@ -58,7 +62,8 @@ def edit_log_page(
             "user": current_user,
             "log": log,
             "discographies": discographies,
-            "error": None
+            "error": None,
+            "now": datetime.now()
         }
     )
     

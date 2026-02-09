@@ -17,7 +17,7 @@ class User(Base):
     )
     is_admin = Column(Boolean, nullable=False, default=False)
     
-    logs = relationship("ListeningLog", back_populates="user")
+    logs = relationship("ListenLog", back_populates="user")
     
 class Discography(Base):
     __tablename__ = "discographies"
