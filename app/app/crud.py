@@ -14,11 +14,21 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 def get_discographies(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Discography).order_by(models.Discography.released_date).offset(skip).limit(limit).all()
 
+# 複数取得用
 def get_logs(db: Session, user_id: Optional[int] = None, skip: int = 0, limit: int = 100):
+    """複数取得用"""
     q = db.query(models.ListenLog)
     if user_id is not None:
         q = q.filter(models.ListenLog.user_id == user_id)
     return q.order_by(models.ListenLog.created_at.desc()).offset(skip).limit(limit).all()
+
+# 1件取得用
+def get_log(db: Session, user_id: int, log_id: int):
+    """1件取得用"""
+    db_log = db.query(models.ListenLog).filter(models.ListenLog.log_id == log_id, models.ListenLog.user_id == user_id).first()
+    if db_log is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="log not found")
+    return db_log
 
 # POST系
 def create_user(db: Session, user: schemas.UserCreate):
