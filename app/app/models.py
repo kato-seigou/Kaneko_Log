@@ -17,6 +17,8 @@ class User(Base):
     )
     is_admin = Column(Boolean, nullable=False, default=False)
     
+    logs = relationship("ListeningLog", back_populates="user")
+    
 class Discography(Base):
     __tablename__ = "discographies"
     discography_id = Column(Integer, primary_key=True)
@@ -60,3 +62,4 @@ class ListenLog(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
     
     discography = relationship("Discography", back_populates="logs")
+    user = relationship("User", back_populates="logs")
