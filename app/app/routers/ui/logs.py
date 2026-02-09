@@ -41,7 +41,7 @@ def new_log_page(
         {"request": request, "user": current_user, "discographies": discographies}
     )
     
-@router.get("/logs/new")
+@router.post("/logs/new")
 def create_log_action(
     request: Request,
     current_user: models.User = Depends(get_current_user_from_cookie),
