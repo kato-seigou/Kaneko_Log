@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy.orm import Session 
+from sqlalchemy.orm import Session , joinedload
 from fastapi import HTTPException, status
 
 from . import models, schemas, security
@@ -29,6 +29,21 @@ def get_log(db: Session, user_id: int, log_id: int):
     if db_log is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="log not found")
     return db_log
+
+# タイムライン用の取得関数
+def get_timeline_logs(db: Session, skip: int = 0, limit: int = 20):
+    q = (
+        db.query(models.ListenLog)
+        .options(
+            joinedload(models.ListenLog.user),
+            joinedload(models.ListenLog.discography)
+        )
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .order_by(models.ListenLog.listened_at.desc(), models.ListenLog.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    return q.all()
 
 # POST系
 def create_user(db: Session, user: schemas.UserCreate):
