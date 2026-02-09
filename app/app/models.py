@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 from sqlalchemy import (Column, ForeignKey, Integer, String, DateTime, Date, Boolean)
 from .database import Base
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -30,6 +31,8 @@ class Discography(Base):
         default=lambda: datetime.now(timezone.utc)
     )
     
+    logs = relationship("ListenLog", back_populates="discography")
+    
 class ListenLog(Base):
     __tablename__ = "listen_logs"
     log_id = Column(Integer, primary_key=True)
@@ -54,5 +57,6 @@ class ListenLog(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc)
     )
-    deleted_at = Column(DateTime(timezone=True), nullable=True) 
+    deleted_at = Column(DateTime(timezone=True), nullable=True)
     
+    discography = relationship("Discography", back_populates="logs")
