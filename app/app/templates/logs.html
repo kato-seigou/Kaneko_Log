@@ -42,11 +42,10 @@
       </div>
       <!-- title end-->
 
-      {% if log.comment %}
-        <div style="margin-top: 8px; white-space: pre-wrap; color: #222;">
-          {{ log.comment }}
-        </div>
-      {% endif %}
+      <div style="margin-top: 8px; font-size: 1.05rem;">
+        {{ log.comment or ""}}
+      </div>
+      
     </div>
     <!--log card end-->
 

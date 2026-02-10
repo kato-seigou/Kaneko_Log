@@ -4,11 +4,14 @@ from datetime import datetime
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from urllib.parse import unquote
 
 from ... import models, crud, schemas
 from ... database import get_db
 from ._templates import templates
 from ._deps import get_current_user_from_cookie
+from ._render import render
+from ._flash import redirect_with_flash, FLASH_SUCCESS, FLASH_ERROR
 
 router = APIRouter(prefix="/ui", tags=["ui"])
 
@@ -23,10 +26,12 @@ def logs_page(
     logs = crud.get_logs(
         db=db, user_id=current_user.user_id, skip=skip, limit=limit
     )
-    return templates.TemplateResponse(
-        "logs.html",
-        {"request": request, "user": current_user, "logs": logs}
+    return render(
+        request=request, 
+        name="logs.html", 
+        context={"user": current_user, "logs": logs}
     )
+    
     
 @router.get("/logs/new")
 def new_log_page(
@@ -36,13 +41,22 @@ def new_log_page(
 ):
     discographies = crud.get_discographies(db=db)
     
-    return templates.TemplateResponse(
-        "log_new.html",
-        {
-            "request": request, 
-            "user": current_user, 
+    # return templates.TemplateResponse(
+    #     "log_new.html",
+    #     {
+    #         "request": request, 
+    #         "user": current_user, 
+    #         "discographies": discographies,
+    #         "now": datetime.now()}
+    # )
+    return render(
+        request=request,
+        name="log_new.html",
+        context={
+            "user": current_user,
             "discographies": discographies,
-            "now": datetime.now()}
+            "now": datetime.now()
+        }
     )
     
 @router.get("/logs/{log_id}/edit")
@@ -55,10 +69,21 @@ def edit_log_page(
     log = crud.get_log(db=db, user_id=current_user.user_id, log_id=log_id)
     discographies = crud.get_discographies(db=db)
     
-    return templates.TemplateResponse(
-        "log_edit.html",
-        {
-            "request": request,
+    # return templates.TemplateResponse(
+    #     "log_edit.html",
+    #     {
+    #         "request": request,
+    #         "user": current_user,
+    #         "log": log,
+    #         "discographies": discographies,
+    #         "error": None,
+    #         "now": datetime.now()
+    #     }
+    # )
+    return render(
+        request=request,
+        name="log_edit.html",
+        context={
             "user": current_user,
             "log": log,
             "discographies": discographies,
@@ -76,17 +101,26 @@ def create_log_action(
     listened_at: datetime = Form(...),
     db: Session = Depends(get_db)
 ):
-    crud.create_log(
-        db=db,
-        user_id=current_user.user_id,
-        log=schemas.ListenLogCreate(
-            discography_id=discography_id,
-            comment=comment,
-            listened_at=listened_at
+    try: 
+        crud.create_log(
+            db=db,
+            user_id=current_user.user_id,
+            log=schemas.ListenLogCreate(
+                discography_id=discography_id,
+                comment=comment,
+                listened_at=listened_at
+            )
         )
-    )
-    return RedirectResponse(
-        url="/ui/logs", status_code=303
+    except Exception:
+        return redirect_with_flash(
+            "/ui/logs",
+            "ログの作成に失敗しました。",
+            level=FLASH_ERROR
+        )
+    return redirect_with_flash(
+        "/ui/logs",
+        "ログを追加しました。",
+        level=FLASH_SUCCESS
     )
     
 @router.post("/logs/{log_id}/edit")
@@ -111,7 +145,12 @@ def edit_log_action(
             listened_at=listened_at
         )
     )
-    return RedirectResponse(url="/ui/logs", status_code=303)
+    # return RedirectResponse(url="/ui/logs", status_code=303)
+    return redirect_with_flash(
+        url="/ui/logs",
+        message="ログを編集しました",
+        level=FLASH_SUCCESS
+    )
 
 @router.post("/logs/{log_id}/delete")
 def delete_log_action(
@@ -121,4 +160,9 @@ def delete_log_action(
     current_user: models.User = Depends(get_current_user_from_cookie)
 ):
     crud.delete_log(db=db, user_id=current_user.user_id, log_id=log_id)
-    return RedirectResponse(url="/ui/logs", status_code=303)
+    # return RedirectResponse(url="/ui/logs", status_code=303)
+    return redirect_with_flash(
+        url="/ui/logs",
+        message="ログを削除しました",
+        level=FLASH_ERROR
+    )

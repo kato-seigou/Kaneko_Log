@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine
 from .routers import auth, discography, logs
@@ -13,6 +14,8 @@ from .routers.ui import timeline as ui_timeline
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="kanekoayano App API")
+
+app.mount("/static", StaticFiles(directory="app/app/static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,

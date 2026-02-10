@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Kaneko Ayano App{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
 </head>
 <body>
     <header style="background: white;">
@@ -18,7 +20,16 @@
     </header>
 
     <main style="padding: 16px;">
-        {%block content%}{% endblock%}
+        {% if flash_success %}
+            <div class="flash flash-success">{{ flash_success }}</div>
+        {% endif %}
+        {% if flash_error %}
+            <div class="flash flash-error">{{ flash_error }}</div>
+        {% endif %}
+        {% if flash_info %}
+            <div class="flash flash-info">{{ flash_info }}</div>
+        {% endif %}
+        {% block content %}{% endblock %}
     </main>
     <footer>
         

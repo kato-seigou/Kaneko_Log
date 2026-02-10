@@ -1,0 +1,25 @@
+body {
+    font-family: system-ui, sans-serif;
+}
+
+.flash {
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin: 12px 0;
+    border: 1px solid #ddd
+}
+
+.flash-success {
+    border-color: #9ad28a;
+    background: #f0fff0;
+}
+
+.flash-error {
+    border-color: #e5a3ae;
+    background: #fff0f0;
+}
+
+.flash-info {
+    border-color: #9fb7e5;
+    background: #f0f6ff
+}
