@@ -3,40 +3,55 @@
 {% block content %}
 <h1>聞いたログ</h1>
 
-<p>ログイン中: {{ user.display_name }}（ID: {{ user.login_id }}）</p>
+<p>ログイン中: {{ user.display_name }} @{{ user.login_id }}</p>
 
-<table border="1" cellpadding="6", style="border-collapse: collapse; width: 100%;">
-  <thead>
-    <tr>
-      <th>discography_id</th>
-      <th>comment</th>
-      <th>listened_at</th>
-      <th>created_at</th>
-    </tr>
-  </thead>
+<div class="log-container" style="max-width: 720px; margin: 0 auto;">
+  {% for log in logs %}
+    <!-- log card start -->
+    <div class="log-card" style= "border: 1px solid #ddd; border-radius: 12px; padding: 12px 14px; margin: 12px 0;">
 
-  <tbody>
-    {% for log in logs %}
-      <tr>
-        <td>{{ log.discography.discography_title }}</td>
-        <td style="white-space: pre-wrap;">
-          {{ log.comment or '—' }}
-        </td>
-        <td>{{ log.listened_at.strftime("%Y-%m-%d %H:%M")}}</td>
-        <td>{{ log.created_at | to_jst }}</td>
-        <td>
-          <a href="/ui/logs/{{ log.log_id }}/edit">編集</a>
+      <!-- header start-->
+      <div class="log-header" style="display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;">
+        <strong>{{ log.user.display_name or "NoName" }}</strong>
+        <span style="color: #666;">@{{ log.user.login_id }}</span>
+        <span style="color: #999; margin-left: auto">
+          {{ log.listened_at.strftime("%Y-%m-%d %H:%M") }}
+        </span>
+        <!--ボタンの大きさをそろえたい-->
+        <div class="log-action" style="display: inline-flex; gap: 8px; align-items: center;">
+          <a href="/ui/logs/{{ log.log_id }}/edit"
+          style="display:inline-block; padding: 6px 10px; border: 1px solid #ddd; border-radius: 999px; text-decoration: none;">
+          編集
+        </a>
 
-            <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
-                  style="display:inline; margin-left: 8px;"
-                  onsubmit="return confirm('このログを削除します。よろしいですか？');">
-              <button type="submit">削除</button>
-            </form>
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+          <form method="post" action="/ui/logs/{{log.log_id}}/delete"
+                style="display:inline; margin: 0;"
+                onsubmit="return confirm('このログを削除します。よろしいですか？');">
+            <button type="submit"
+                    style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 999px; background: transparent; cursor: pointer;">
+                    削除
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- header end-->
+
+      <!-- title start-->
+      <div style="margin-top: 8px; font-size: 1.05rem;">
+        🎧{{ log.discography.discography_title }}
+      </div>
+      <!-- title end-->
+
+      {% if log.comment %}
+        <div style="margin-top: 8px; white-space: pre-wrap; color: #222;">
+          {{ log.comment }}
+        </div>
+      {% endif %}
+    </div>
+    <!--log card end-->
+
+  {% endfor %}
+</div>
 
 <p style="margin-top:12px;">
   <a href="/ui/logs/new">新規作成へ</a>

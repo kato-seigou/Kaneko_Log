@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 from .database import Base, engine
 from .routers import auth, discography, logs
@@ -31,11 +32,7 @@ app.include_router(ui_timeline.router)
 
 @app.get("/")
 def root():
-    return {
-        "message": "kanekoayano App API",
-        "docs": "/docs",
-        "health": "/health",
-    }
+    return RedirectResponse(url="/ui/login", status_code=303)
 
 
 @app.get("/health")

@@ -18,7 +18,7 @@ def login_page(request: Request):
     if token:
         return RedirectResponse(url="/ui/logs", status_code=303)
     return templates.TemplateResponse(
-        "login.html", {"request": request, "error": None}
+        "login.html", {"request": request, "error": None, "user": None}
     )
 
 @router.post("/login")
@@ -68,7 +68,9 @@ def logout_action():
 
 @router.get("/register")
 def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request, "error": None})
+    return templates.TemplateResponse(
+        "register.html", {"request": request, "error": None, "user": None}
+        )
 
 @router.post("/register")
 def register_action(
