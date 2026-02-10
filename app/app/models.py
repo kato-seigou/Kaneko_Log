@@ -42,7 +42,7 @@ class ListenLog(Base):
         Integer, 
         ForeignKey("users.user_id", ondelete="CASCADE"), 
         nullable=False
-                     )
+                    )
     discography_id = Column(
         Integer, 
         ForeignKey("discographies.discography_id", ondelete="RESTRICT"), 
