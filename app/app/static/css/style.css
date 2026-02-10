@@ -23,3 +23,11 @@ body {
     border-color: #9fb7e5;
     background: #f0f6ff
 }
+
+.log-comment {
+    white-space: pre-wrap;
+    margin-top: 8px;
+    font-size: 1.05rem;
+    padding-left: 0;
+    text-indent: 0;
+}
