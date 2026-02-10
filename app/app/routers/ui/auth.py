@@ -78,8 +78,21 @@ def register_action(
     login_id: str = Form(...), # login_idはフォームから送られてくる**必須**項目
     display_name: str = Form(""), # display_nameはフォームから送られてくる**必須ではない**項目
     password: str = Form(...),
+    password_confirm: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    if password != password_confirm:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "パスワードが一致しません"},
+            status_code=303
+        )
+    if len(password) < 8:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "パスワードは8文字以上にしてください"},
+            status_code=400
+        )
     try:
         user_in = schemas.UserCreate(login_id=login_id, display_name=display_name, password=password)
         crud.create_user(db=db, user=user_in)
