@@ -18,13 +18,6 @@ from . import models
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
 
-# 設定
-SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE_ME__SET__ENV_SECRET_KEY")
-# 署名アルゴリズムは特に理由がなければ変更しない
-ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-# ログイン状態の有効期限（ここでは60分）
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
-
 if SECRET_KEY == "CHANGE_ME__SET__ENV_SECRET_KEY":
     raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
 
@@ -32,7 +25,7 @@ if SECRET_KEY == "CHANGE_ME__SET__ENV_SECRET_KEY":
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # UI用: トークンがなくても401を出さない
-oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="aut/login", auto_error=False)
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=False)
 
 # パスワード関連
 # ハッシュ化と認証
@@ -128,7 +121,7 @@ def get_current_user(
 
 # UI用のチェック関数
 def get_current_user_optional(
-    token: str | None = Depends(oauth2_scheme),
+    token: str | None = Depends(oauth2_scheme_optional),
     db: Session = Depends(get_db),
 ) -> Optional[models.User]:
     if not token:
