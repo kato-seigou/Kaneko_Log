@@ -3,8 +3,11 @@ from __future__ import annotations
 from fastapi import APIRouter, Request, Form, Depends, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from urllib.parse import unquote
 
 from ._templates import templates
+from ._render import render
+from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 from ...database import get_db
 from ... import crud, security, schemas
 
@@ -17,9 +20,15 @@ def login_page(request: Request):
     token = request.cookies.get(COOKIE_NAME)
     if token:
         return RedirectResponse(url="/ui/logs", status_code=303)
-    return templates.TemplateResponse(
-        "login.html", {"request": request, "error": None, "user": None}
+    # return templates.TemplateResponse(
+    #     "login.html", {"request": request, "error": None, "user": None}
+    # )
+    return render(
+        request=request,
+        name="login.html",
+        context={"error": None, "user": None}
     )
+    
 
 @router.post("/login")
 def login_action(
@@ -38,9 +47,15 @@ def login_action(
     # DBでユーザー確認 and パスワード検証
     user = security.authenticate_user(db=db, login_id=login_id, password=password)
     if not user:
-        return templates.TemplateResponse(
-            "login.html",
-            {"request": request, "error": "login_id または password が違います"},
+        # return templates.TemplateResponse(
+        #     "login.html",
+        #     {"request": request, "error": "login_id または password が違います"},
+        #     status_code=400,
+        # )
+        return render(
+            request=request,
+            name="login.html",
+            context={"request": request, "error": "login_id または password が違います"},
             status_code=400,
         )
     
@@ -58,19 +73,24 @@ def login_action(
         path="/"
     )
     # return response
-    return response
+    return add_flash(response=response, message="ログインしました", level=FLASH_SUCCESS)
 
 @router.get("/logout")
 def logout_action():
     response = RedirectResponse(url="/ui/login", status_code=303)
     response.delete_cookie(COOKIE_NAME, path="/")
-    return response
+    return add_flash(response=response, message="ログアウトしました", level=FLASH_INFO)
 
 @router.get("/register")
 def register_page(request: Request):
-    return templates.TemplateResponse(
-        "register.html", {"request": request, "error": None, "user": None}
-        )
+    # return templates.TemplateResponse(
+    #     "register.html", {"request": request, "error": None, "user": None}
+    #     )
+    return render(
+        request=request,
+        name="register.html",
+        context={"error": None, "user": None}
+    )
 
 @router.post("/register")
 def register_action(

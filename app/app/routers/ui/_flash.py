@@ -1,4 +1,4 @@
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from urllib.parse import quote
 
 FLASH_SUCCESS = "flash_success"
@@ -16,6 +16,28 @@ def redirect_with_flash(
     redirect しつつ、flash cookieを1つセットする
     """
     response = RedirectResponse(url=url, status_code=status_code)
-    response.set_cookie(key=level, value=quote(message), max_age=max_age)
+    response.set_cookie(
+        key=level,
+        value=quote(message),
+        max_age=max_age,
+        httponly=True,
+        samesite="lax",
+        path="/"
+    )
     return response
 
+def add_flash(
+    response: Response,
+    message: str,
+    level: str = FLASH_SUCCESS,
+    max_age: int = 10
+):
+    response.set_cookie(
+        key=level,
+        value=quote(message),
+        max_age=max_age,
+        httponly=True,
+        samesite="lax",
+        path="/"
+    )
+    return response
