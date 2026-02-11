@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from ... import models, crud, schemas
 from ... database import get_db
 from ._templates import templates
-from ._deps import get_current_user_from_cookie
+from ._deps import get_current_user_from_cookie_optional
+from ._flash import add_flash, FLASH_INFO
 
 router = APIRouter(prefix="/ui", tags=["tags"])
 
@@ -13,10 +14,14 @@ router = APIRouter(prefix="/ui", tags=["tags"])
 def timeline_page(
     request: Request,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user_from_cookie),
+    current_user: models.User = Depends(get_current_user_from_cookie_optional),
     skip: int = 0,
     limit: int = 20
 ):
+    if current_user is None:
+        resp = RedirectResponse(url="/ui/login", status_code=303)
+        return add_flash(resp, "ログインしてください", level=FLASH_INFO)
+    
     logs = crud.get_timeline_logs(db=db, skip=skip, limit=limit)
     
     next_skip = skip + limit

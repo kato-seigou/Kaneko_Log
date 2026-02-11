@@ -9,9 +9,9 @@ from urllib.parse import unquote
 from ... import models, crud, schemas
 from ... database import get_db
 from ._templates import templates
-from ._deps import get_current_user_from_cookie
+from ._deps import get_current_user_from_cookie, get_current_user_from_cookie_optional
 from ._render import render
-from ._flash import redirect_with_flash, FLASH_SUCCESS, FLASH_ERROR
+from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 
 router = APIRouter(prefix="/ui", tags=["ui"])
 
@@ -19,10 +19,15 @@ router = APIRouter(prefix="/ui", tags=["ui"])
 def logs_page(
     request: Request,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user_from_cookie),
+    current_user: models.User = Depends(get_current_user_from_cookie_optional),
     skip: int = 0,
     limit: int = 100
 ):
+    
+    if current_user is None:
+        resp = RedirectResponse(url="/ui/login", status_code=303)
+        return add_flash(resp, "ログインしてください", level=FLASH_INFO)
+    
     logs = crud.get_logs(
         db=db, user_id=current_user.user_id, skip=skip, limit=limit
     )

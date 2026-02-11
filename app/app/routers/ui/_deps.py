@@ -4,7 +4,9 @@
 # security.get_current_userはOAuth2依存なので、UIように別Dependencyを用意する
 from __future__ import annotations
 
+from typing import Optional
 from fastapi import Depends, HTTPException, Request, status
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import JWTError
 
@@ -37,8 +39,28 @@ def get_current_user_from_cookie(
         
     user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if user is None:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     
+    return user
+
+def get_current_user_from_cookie_optional(
+    request: Request,
+    db: Session = Depends(get_db),
+) -> Optional[models.User]:
+    token = request.cookies.get(COOKIE_NAME)
+    if not token:
+        return None
+
+    try:
+        payload = security.decode_access_token(token)
+        sub = payload.get("sub")
+        if sub is None:
+            return None
+        user_id = int(sub)
+    except (JWTError, ValueError, TypeError):
+        return None
+
+    user = db.query(models.User).filter(models.User.user_id == user_id).first()
     return user
 
 def require_admin_from_cookie(

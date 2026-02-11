@@ -9,7 +9,8 @@ from datetime import date
 from ... database import get_db
 from ... import crud, models, schemas
 from ._templates import templates
-from ._deps import require_admin_from_cookie, get_current_user_from_cookie
+from ._deps import require_admin_from_cookie, get_current_user_from_cookie_optional
+from ._flash import add_flash, FLASH_INFO
 
 router = APIRouter(prefix="/ui", tags=["ui"])
 
@@ -20,8 +21,12 @@ router = APIRouter(prefix="/ui", tags=["ui"])
 def discographies_page(
     request: Request,
     db: Session = Depends(get_db),
-    user: models.User | None = Depends(get_current_user_from_cookie)
+    user: models.User | None = Depends(get_current_user_from_cookie_optional)
 ):
+    if user is None:
+        resp = RedirectResponse(url="/ui/login", status_code=303)
+        return add_flash(resp, "ログインしてください", level=FLASH_INFO)
+    
     discographies = crud.get_discographies(db=db)
     return templates.TemplateResponse(
         "discographies.html",

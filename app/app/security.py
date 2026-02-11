@@ -19,8 +19,6 @@ if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
 
 # 設定
-# TODO この辺一切わからない
-# TODO: SECRET_KEYは変更する方が良い
 SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE_ME__SET__ENV_SECRET_KEY")
 # 署名アルゴリズムは特に理由がなければ変更しない
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
@@ -29,6 +27,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
 
 if SECRET_KEY == "CHANGE_ME__SET__ENV_SECRET_KEY":
     raise RuntimeError("SECRET_KEY is not set. Please set SECRET_KEY env var.")
+
+# FastAPI依存: ログインユーザー取得
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+# UI用: トークンがなくても401を出さない
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="aut/login", auto_error=False)
 
 # パスワード関連
 # ハッシュ化と認証
@@ -46,7 +50,6 @@ def _truncate_to_72_bytes(s: str) -> str:
 def hash_password(plain_password: str) -> str:
     # 平文パスワードをハッシュ化して返す（DB保存用）
     b = plain_password.encode("utf-8")
-    print("PW bytes:", len(b), repr(plain_password))
     safe = _truncate_to_72_bytes(plain_password)
     return pwd_context.hash(safe)
 
@@ -78,9 +81,6 @@ def decode_access_token(token: str) -> dict[str, Any]:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     return payload
 
-# FastAPI依存: ログインユーザー取得
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
 # ログイン時に、IDとパスワードが正しいかを確認してUserを返すための関数
 def authenticate_user(login_id: str, password: str, db: Session) -> Optional[models.User]:
     user = db.query(models.User).filter(models.User.login_id==login_id).first()
@@ -101,6 +101,7 @@ def get_current_user(
     - sub（user_id想定）を取り出す
     - DBからUserを取得
     """
+    # 認証失敗ケースをcredentials_exceptionとして変数化（401を必ず出せるようにしている）
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -123,6 +124,27 @@ def get_current_user(
     user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if user is None:
         raise credentials_exception
+    return user
+
+# UI用のチェック関数
+def get_current_user_optional(
+    token: str | None = Depends(oauth2_scheme),
+    db: Session = Depends(get_db),
+) -> Optional[models.User]:
+    if not token:
+        return None
+    
+    try:
+        payload = decode_access_token(token)
+        sub = payload.get("sub")
+        if sub is None:
+            return None
+        user_id = int(sub)
+        
+    except (JWTError, TypeError, ValueError):
+        return None
+    
+    user = db.query(models.User).filter(models.User.user_id == user_id).first()
     return user
 
 # 管理者チェック用のDependency
