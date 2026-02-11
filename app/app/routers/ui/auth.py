@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from fastapi import APIRouter, Request, Form, Depends, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -14,6 +15,7 @@ from ... import crud, security, schemas
 router = APIRouter(prefix="/ui", tags=["ui"])
 
 COOKIE_NAME = "access_token"
+logger = logging.getLogger(__name__)
 
 @router.get("/login")
 def login_page(request: Request):
@@ -116,10 +118,23 @@ def register_action(
     try:
         user_in = schemas.UserCreate(login_id=login_id, display_name=display_name, password=password)
         crud.create_user(db=db, user=user_in)
+    
+    # 想定内エラー
     except Exception as e:
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error": str(e)},
-            status_code=400
+            {"request": request, "error": e.detail
+             },
+            status_code=e.status_code
         )
+        
+    # 想定外エラー
+    except Exception:
+        logger.exception("Unexpected error in register_action")
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "エラーが発生しました。もう一度お試しください"},
+            status_code=500
+        )
+        
     return RedirectResponse(url="/ui/login", status_code=303)

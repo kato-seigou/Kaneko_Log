@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging 
 from typing import Optional
 from fastapi import APIRouter, Request, Depends, Form
 from fastapi.responses import RedirectResponse
@@ -14,7 +15,7 @@ from ._flash import add_flash, FLASH_INFO
 
 router = APIRouter(prefix="/ui", tags=["ui"])
 
-
+logger = logging.getLogger(__name__)
 
 # ディスコグラフィ一覧表示
 @router.get("/discographies")
@@ -156,6 +157,19 @@ def delete_discography_action(
                 "request": request,
                 "discography": discography,
                 "user": admin_user,
-                "error": str(e)
+                "error": e.detail
+            },
+            status_code=e.status_code
+        )
+    
+    except Exception:
+        logger.exception("Unexpected error in delete_discography_action")
+        return templates.TemplateResponse(
+            "discography_edit.html",
+            {
+                "request": request,
+                "discography": discography,
+                "user": admin_user,
+                "error": "エラーが発生しました。もう一度お試しください。"
             }
         )

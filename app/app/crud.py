@@ -32,7 +32,7 @@ def get_log(db: Session, user_id: int, log_id: int):
     """1件取得用"""
     db_log = db.query(models.ListenLog).filter(models.ListenLog.log_id == log_id, models.ListenLog.user_id == user_id).first()
     if db_log is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="log not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ログが見つかりませんでした")
     return db_log
 
 # タイムライン用の取得関数
@@ -57,7 +57,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     # login_idの重複チェック
     db_user_registered = db.query(models.User).filter(models.User.login_id == user.login_id).first()
     if db_user_registered is not None:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"{user.login_id} is already used.")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"このログインID（@{user.login_id}）はすでに使われています。")
     else:
         db_user = models.User(
             login_id = user.login_id,
@@ -89,7 +89,7 @@ def create_discography(db: Session, discography: schemas.DiscographyCreate):
 def create_log(db: Session, user_id: int, log: schemas.ListenLogCreate):
     disco_existing = db.query(models.Discography).filter(models.Discography.discography_id == log.discography_id).first()
     if disco_existing is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="discography not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ディスコグラフィが見つかりませんでした")
     else:
         db_log = models.ListenLog(
             user_id = user_id,
@@ -110,12 +110,12 @@ def update_log(db: Session, user_id: int, log_id: int, log_update: schemas.Liste
         .first()
     )
     if db_log is None or db_log.user_id != user_id:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="log not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ログが見つかりませんでした")
     
     if log_update.discography_id is not None:
         disco = db.query(models.Discography).filter(models.Discography.discography_id == log_update.discography_id).first()
         if disco is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="discography not found.")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ディスコグラフィが見つかりませんでした")
         db_log.discography_id = log_update.discography_id
         
     
@@ -132,7 +132,7 @@ def update_discography(db: Session, discography_id: int, disco_update: schemas.D
     disco = get_discography(db, discography_id)
     
     if disco is None:
-        raise HTTPException(status_code=404, detail="discography not found")
+        raise HTTPException(status_code=404, detail="ディスコグラフィが見つかりませんでした")
     
     if disco_update.discography_title is not None:
         exists = db.query(models.Discography).filter(
@@ -140,7 +140,7 @@ def update_discography(db: Session, discography_id: int, disco_update: schemas.D
             models.Discography.discography_id != discography_id
         ).first()
         if exists:
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="discography_title already used")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="このタイトルのディスコグラフィは既に存在します")
         disco.discography_title = disco_update.discography_title
         
     if disco_update.discography_num is not None:
@@ -164,7 +164,7 @@ def delete_log(db: Session, user_id: int, log_id: int):
         .first()
     )
     if db_log is None or db_log.user_id != user_id:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="log not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ログが見つかりませんでした")
     
     db.delete(db_log)
     db.commit()
@@ -175,7 +175,7 @@ def delete_discography(db: Session, discography_id: int):
     if disco is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Discography not found."
+            detail="ディスコグラフィが見つかりませんでした"
         )
 
     try:
@@ -185,6 +185,6 @@ def delete_discography(db: Session, discography_id: int):
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="This discography is referenced by logs and cannot be deleted."
+            detail="このディスコグラフィはすでにログで参照されているため、削除することができません"
         )
     return True
