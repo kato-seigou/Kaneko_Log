@@ -1,6 +1,7 @@
 * { box-sizing: border-box; }
 
 /* 基本 */
+
 html, body {
     height: 100%;
 }
@@ -17,7 +18,6 @@ a {
     color: inherit;
     text-decoration: none;
 }
-
 a:hover { text-decoration: underline;}
 
 /* サイドバー概観 */
@@ -48,11 +48,20 @@ a:hover { text-decoration: underline;}
 }
 
 .toggle-btn {
-    font-size: 20px;
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    left: auto;
+    z-index: 1100;   /* sidebar(1000)とbackdrop(999)より上 */
+    margin: 0;
+
+    font-size: 24px;
     background: none;
     border: none;
+    padding: 8px 10px;
     cursor: pointer;
-    margin-bottom: 16px;
+
+    color: #111;
 }
 
 /* 開いたら表示（本文は動かない） */
@@ -83,6 +92,7 @@ a:hover { text-decoration: underline;}
 
 /* サイドバーの中身 */
 .sidebar__nav {
+    margin-top: 60px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -101,10 +111,6 @@ a:hover { text-decoration: underline;}
     text-overflow: ellipsis;
 }
 
-.sidebar__link:hover {
-    background: rgba(0,0,0,0.04);
-}
-
 .sidebar__link--accent {
     font-weight: 700;
 }
@@ -115,23 +121,41 @@ a:hover { text-decoration: underline;}
     border-radius: 12px;
     padding: 10px 12px;
     margin: 12px 0;
-    border: 1px solid #ddd
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.flash.hide {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+.flash-container {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(720px, calc(100vw - 24px));
+    z-index: 2000;
+    pointer-events: none; /* 下のUI操作を邪魔しない */
 }
 
 .flash--success {
-    border-color: #9ad28a;
-    background: #f0fff0;
+    border-color: #51a1e7;
+    background: #51a1e7;
 }
 
 .flash--error {
-    border-color: #e5a3ae;
-    background: #fff0f0;
+    border-color: #F4A7BE;
+    background: #F4A7BE;
 }
 
 .flash--info {
     border-color: #9fb7e5;
-    background: #f0f6ff
+    background: #9fb7e5
 }
+
 
 /* utility for multiline text */
 .prewrap {
