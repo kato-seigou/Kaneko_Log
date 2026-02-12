@@ -9,6 +9,7 @@
 {% endif %}
 
 <form method="post" action="/ui/discographies/new">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <div>
     <label>タイトル</label><br />
     <input name="discography_title" required />

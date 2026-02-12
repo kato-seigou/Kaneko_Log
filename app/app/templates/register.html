@@ -8,6 +8,7 @@
 {% endif %}
 
 <form method="post" action="/ui/register">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
   <div>
     <label>login_id</label><br />
     <input name="login_id" required />

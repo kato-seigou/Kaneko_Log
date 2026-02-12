@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from fastapi import APIRouter, Request, Form, Depends, status
+from fastapi import APIRouter, Request, Form, Depends, status, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from urllib.parse import unquote
@@ -9,6 +9,7 @@ from urllib.parse import unquote
 from ._templates import templates
 from ._render import render
 from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
+from ._csrf import ensure_csrf_token, validate_csrf
 from ...database import get_db
 from ... import crud, security, schemas
 
@@ -22,9 +23,6 @@ def login_page(request: Request):
     token = request.cookies.get(COOKIE_NAME)
     if token:
         return RedirectResponse(url="/ui/logs", status_code=303)
-    # return templates.TemplateResponse(
-    #     "login.html", {"request": request, "error": None, "user": None}
-    # )
     return render(
         request=request,
         name="login.html",
@@ -37,7 +35,8 @@ def login_action(
     request: Request,
     login_id: str = Form(...),
     password: str = Form(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    csrf_token: str = Form(...)
 ):
     """ 
     1. login_id と passwordを受け取る
@@ -45,15 +44,11 @@ def login_action(
     3. JWT発行
     4. Cookie保存して /ui/logs にリダイレクト
     """
+    validate_csrf(request, csrf_token)
     
     # DBでユーザー確認 and パスワード検証
     user = security.authenticate_user(db=db, login_id=login_id, password=password)
     if not user:
-        # return templates.TemplateResponse(
-        #     "login.html",
-        #     {"request": request, "error": "login_id または password が違います"},
-        #     status_code=400,
-        # )
         return render(
             request=request,
             name="login.html",
@@ -85,9 +80,6 @@ def logout_action():
 
 @router.get("/register")
 def register_page(request: Request):
-    # return templates.TemplateResponse(
-    #     "register.html", {"request": request, "error": None, "user": None}
-    #     )
     return render(
         request=request,
         name="register.html",
@@ -101,40 +93,45 @@ def register_action(
     display_name: str = Form(""), # display_nameはフォームから送られてくる**必須ではない**項目
     password: str = Form(...),
     password_confirm: str = Form(...),
+    csrf_token: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    validate_csrf(request, csrf_token)
     if password != password_confirm:
-        return templates.TemplateResponse(
-            "register.html",
-            {"request": request, "error": "パスワードが一致しません"},
-            status_code=303
-        )
+        return render(
+        request=request,
+        name="register.html",
+        context={"error": "パスワードが一致しません", "user": None},
+        status_code=400,
+    )
     if len(password) < 8:
-        return templates.TemplateResponse(
-            "register.html",
-            {"request": request, "error": "パスワードは8文字以上にしてください"},
-            status_code=400
-        )
+        return render(
+        request=request,
+        name="register.html",
+        context={"error": "パスワードは8文字以上にしてください", "user": None},
+        status_code=400,
+    )
     try:
         user_in = schemas.UserCreate(login_id=login_id, display_name=display_name, password=password)
         crud.create_user(db=db, user=user_in)
     
     # 想定内エラー
-    except Exception as e:
-        return templates.TemplateResponse(
-            "register.html",
-            {"request": request, "error": e.detail
-             },
-            status_code=e.status_code
-        )
+    except HTTPException as e:
+        return render(
+        request=request,
+        name="register.html",
+        context={"error": e.detail, "user": None},
+        status_code=e.status_code,
+    )
         
     # 想定外エラー
     except Exception:
         logger.exception("Unexpected error in register_action")
-        return templates.TemplateResponse(
-            "register.html",
-            {"request": request, "error": "エラーが発生しました。もう一度お試しください"},
-            status_code=500
-        )
+        return render(
+        request=request,
+        name="register.html",
+        context={"error": "エラーが発生しました。もう一度お試しください", "user": None},
+        status_code=500,
+    )
         
     return RedirectResponse(url="/ui/login", status_code=303)

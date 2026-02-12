@@ -17,6 +17,7 @@
 {% else %}
 
   <form method="post" action="/ui/discographies/{{ discography.discography_id }}/edit">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <div>
       <label>タイトル</label><br />
       <input name="discography_title" required value="{{ discography.discography_title }}" />
@@ -72,6 +73,7 @@
         style="margin-top:16px;"
         onsubmit="return confirm('本当に削除しますか？');"
         >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button type="submit" style="color:red;">
             削除
         </button>

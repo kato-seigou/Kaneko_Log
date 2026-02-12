@@ -4,6 +4,7 @@
 <h1>新規ログ作成</h1>
 
 <form method="post" action="/ui/logs/new">
+    <input type="hidden", name="csrf_token" value="{{ csrf_token }}">
     <div>
         <label>discography title</label><br />
         <select name="discography_id" required>

@@ -7,7 +7,7 @@
   {% for log in logs %}
     <div style="border: 1px solid #ddd; border-radius: 12px; padding: 12px 14px; margin: 12px 0;">
       <div style="display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;">
-        <strong>{{ log.user.display_name or 'NoName' }}</strong>
+        <strong>{{ log.user.display_name or '@名無し' }}</strong>
         <span style="color: #666;">@{{ log.user.login_id }}</span>
         <span style="color: #999; margin-left: auto;">
           {{ log.listened_at.strftime('%Y-%m-%d %H:%M') }}

@@ -12,6 +12,7 @@
   {% endif %}
 
   <form method="post" action="/ui/logs/{{ log.log_id }}/edit">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <div>
       <label>ディスコグラフィ</label>
       <select name="discography_id" required>
@@ -47,6 +48,7 @@
 
   <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
         onsubmit="return confirm('このログを削除します。よろしいですか？');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button type="submit">削除</button>
   </form>
 </body>

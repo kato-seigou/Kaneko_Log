@@ -11,6 +11,7 @@ from ... database import get_db
 from ._templates import templates
 from ._deps import get_current_user_from_cookie, get_current_user_from_cookie_optional
 from ._render import render
+from ._csrf import ensure_csrf_token, validate_csrf
 from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 
 router = APIRouter(prefix="/ui", tags=["ui"])
@@ -46,14 +47,6 @@ def new_log_page(
 ):
     discographies = crud.get_discographies(db=db)
     
-    # return templates.TemplateResponse(
-    #     "log_new.html",
-    #     {
-    #         "request": request, 
-    #         "user": current_user, 
-    #         "discographies": discographies,
-    #         "now": datetime.now()}
-    # )
     return render(
         request=request,
         name="log_new.html",
@@ -104,8 +97,10 @@ def create_log_action(
     discography_id: int = Form(...),
     comment: str | None = Form(None),
     listened_at: datetime = Form(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    csrf_token: str = Form(...)
 ):
+    validate_csrf(request, csrf_token)
     try: 
         crud.create_log(
             db=db,
@@ -136,8 +131,11 @@ def edit_log_action(
     current_user: models.User = Depends(get_current_user_from_cookie),
     discography_id: int = Form(...),
     comment: str | None = Form(None),
-    listened_at: datetime = Form(...)
+    listened_at: datetime = Form(...),
+    csrf_token: str = Form(...)
 ):
+    validate_csrf(request, csrf_token)
+    
     comment = comment if (comment is not None and comment.strip() != "") else None
     
     crud.update_log(
@@ -162,8 +160,11 @@ def delete_log_action(
     log_id: int,
     request: Request,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user_from_cookie)
+    current_user: models.User = Depends(get_current_user_from_cookie),
+    csrf_token: str = Form(...)
 ):
+    validate_csrf(request, csrf_token)
+    
     crud.delete_log(db=db, user_id=current_user.user_id, log_id=log_id)
     # return RedirectResponse(url="/ui/logs", status_code=303)
     return redirect_with_flash(

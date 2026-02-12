@@ -27,6 +27,7 @@
           <form method="post" action="/ui/logs/{{log.log_id}}/delete"
                 style="display:inline; margin: 0;"
                 onsubmit="return confirm('このログを削除します。よろしいですか？');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <button type="submit"
                     style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 999px; background: transparent; cursor: pointer;">
                     削除
