@@ -1,5 +1,5 @@
 from typing import Optional
-
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session , joinedload
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
@@ -166,7 +166,9 @@ def delete_log(db: Session, user_id: int, log_id: int):
     if db_log is None or db_log.user_id != user_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ログが見つかりませんでした")
     
-    db.delete(db_log)
+    # db.delete(db_log)
+    # db.commit()
+    db_log.deleted_at = datetime.now(timezone.utc)
     db.commit()
     return True
 
