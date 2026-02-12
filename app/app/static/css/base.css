@@ -1,5 +1,6 @@
 * { box-sizing: border-box; }
 
+/* 基本 */
 html, body {
     height: 100%;
 }
@@ -19,30 +20,60 @@ a {
 
 a:hover { text-decoration: underline;}
 
-/* layout */
-/* 右サイドバー */
-.layout {
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    min-height: 100vh;
-}
-
+/* サイドバー概観 */
+/* 本文は固定：レイアウトを動かさない */
 .container {
     max-width: 960px;
     margin: 0 auto;
     padding: 16px;
 }
 
-/* サイドバー本体 */
+/* サイドバーは画面に固定して“上に被せる” */
 .sidebar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    right: 0;
     height: 100vh;
-    border-left: 1px solid #e7e7ea;
+    width: 260px;
+
     background: #fbfbfc;
+    border-left: 1px solid #e7e7ea;
     padding: 24px 18px;
-    display: block;
+
+    z-index: 1000;
+
+  /* 最初は画面外（右）に隠す */
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    overflow: auto;
 }
+
+/* 開いたら表示（本文は動かない） */
+.sidebar-open .sidebar {
+    transform: translateX(0);
+}
+
+/* 背景の暗幕（クリックで閉じる） */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 999;
+}
+
+.sidebar-open .backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ついで：開いてる間は背景スクロールを止めたいなら */
+.sidebar-open {
+    overflow: hidden;
+}
+
 
 /* サイドバーの中身 */
 .sidebar__nav {
