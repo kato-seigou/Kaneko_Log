@@ -15,7 +15,7 @@ class UserBase(BaseModel):
     # UserCreateをUserReadで継承するとresに
     # passwordが含まれてしまう
     display_name: Optional[str] = Field(default=None, max_length=12)
-    login_id: str = Field(max_length=10)
+    login_id: str = Field(max_length=12)
     
 class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=72)

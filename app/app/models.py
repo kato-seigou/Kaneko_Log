@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = "users"
     user_id = Column(Integer, primary_key=True, index=True)
-    login_id = Column(String(10), nullable=False, unique=True, index=True)
+    login_id = Column(String(12), nullable=False, unique=True, index=True)
     display_name = Column(String(12), nullable=True, unique=False, index=True)
     password_hash = Column(String, nullable=False, unique=False)
     created_at = Column(
