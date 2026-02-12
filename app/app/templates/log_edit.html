@@ -1,55 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>ログ編集</title>
-</head>
-<body>
-  <h1>ログ編集</h1>
+{% extends "base.html" %}
+{% block title %}ログの編集{% endblock %}
 
-  {% if error %}
-    <p style="color:red;">{{ error }}</p>
-  {% endif %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/logs.css') }}">
+{% endblock %}
 
-  <form method="post" action="/ui/logs/{{ log.log_id }}/edit">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <div>
-      <label>ディスコグラフィ</label>
-      <select name="discography_id" required>
-        {% for d in discographies %}
-          <option value="{{ d.discography_id }}"
-            {% if d.discography_id == log.discography_id %}selected{% endif %}>
-            {{ d.discography_title }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
+{% block content %}
+<h1>ログ編集</h1>
 
-    <div>
-      <label>コメント（任意）</label>
-      <textarea name="comment" rows="3" maxlength="50">{{ log.comment or '' }}</textarea>
-    </div>
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
 
-    <div>
-      <label>聴いた日時</label>
-      <input
-        type="datetime-local"
-        name="listened_at"
-        required
-        value="{{ log.listened_at.strftime('%Y-%m-%dT%H:%M') }}"
-      >
-    </div>
+<form method="post" class="form" action="/ui/logs/{{ log.log_id }}/edit">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="form-group">
+    <label>ディスコグラフィ</label>
+    <select name="discography_id" required>
+      {% for d in discographies %}
+        <option value="{{ d.discography_id }}"
+          {% if d.discography_id == log.discography_id %}selected{% endif %}>
+          {{ d.discography_title }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
 
-    <button type="submit">更新</button>
-    <a href="/ui/logs">戻る</a>
-  </form>
+  <div class="form-group">
+    <label>聴いた日時</label>
+    <input
+      type="datetime-local"
+      name="listened_at"
+      required
+      value="{{ log.listened_at.strftime('%Y-%m-%dT%H:%M') }}"
+    >
+  </div>
 
-  <hr>
+  <div class="form-group">
+    <label>コメント（任意）</label>
+    <textarea name="comment" rows="3" maxlength="50">{{ log.comment or '' }}</textarea>
+  </div>
 
-  <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
-        onsubmit="return confirm('このログを削除します。よろしいですか？');">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <button type="submit">削除</button>
-  </form>
-</body>
+  <div class="form-group">
+    <button type="submit" class="btn-primary">更新</button>
+  </div>
+</form>
+
+<form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+      onsubmit="return confirm('このログを削除します。よろしいですか？');">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <button type="submit" class="btn-primary-delete">削除</button>
+</form>
+
+<p style="margin-top:12px;">
+  <a href="/ui/logs">戻る</a>
+</p>
+
+{% endblock %}
+
 </html>

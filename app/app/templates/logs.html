@@ -1,39 +1,46 @@
 {% extends "base.html" %}
 {% block title %}Logs{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/logs.css') }}">
+{% endblock %}
+
 {% block content %}
 <h1>My Logs</h1>
 
 <p>ログイン中: {{ user.display_name }} @{{ user.login_id }}</p>
 
-<div class="log-container" style="max-width: 720px; margin: 0 auto;">
+<p style="margin-top:12px;">
+  <a href="/ui/logs/new">新規ログ登録へ</a>
+</p>
+
+<div class="log-container">
   {% for log in logs %}
     <!-- log card start -->
-    <div class="log-card" style= "border: 1px solid #ddd; border-radius: 12px; padding: 12px 14px; margin: 12px 0;">
+    <div class="log-card">
 
       <!-- header start-->
-      <div class="log-header" style="display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;">
+      <div class="log-header">
         <strong>{{ log.user.display_name or "NoName" }}</strong>
         <span style="color: #666;">@{{ log.user.login_id }}</span>
         <span style="color: #999; margin-left: auto">
           {{ log.listened_at.strftime("%Y-%m-%d %H:%M") }}
         </span>
-        <!--ボタンの大きさをそろえたい-->
-        <div class="log-action" style="display: inline-flex; gap: 8px; align-items: center;">
-          <a href="/ui/logs/{{ log.log_id }}/edit"
-          style="display:inline-block; padding: 6px 10px; border: 1px solid #ddd; border-radius: 999px; text-decoration: none;">
-          編集
-        </a>
 
-          <form method="post" action="/ui/logs/{{log.log_id}}/delete"
-                style="display:inline; margin: 0;"
-                onsubmit="return confirm('このログを削除します。よろしいですか？');">
+        <!--ボタンの大きさをそろえたい-->
+        <div class="log-action">
+          <form method="get" action="ui/logs/{{ log.log_id }}/edit">
+            <button type="submit" class="action-btn">編集</button>
+          </form>
+
+          <form method="post" action="ui/logs/{{ log.log_id }}/delete"
+            onsubmit="return confirm（'このログを削除します。よろしいですか？'）">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit"
-                    style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 999px; background: transparent; cursor: pointer;">
-                    削除
-            </button>
+            <button type="submit" class="action-btn action-btn--danger">削除</button>
           </form>
         </div>
+
+
+
       </div>
       <!-- header end-->
 
@@ -49,7 +56,4 @@
   {% endfor %}
 </div>
 
-<p style="margin-top:12px;">
-  <a href="/ui/logs/new">新規作成へ</a>
-</p>
 {% endblock %}

@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% block title %}新規ログ作成{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/logs.css') }}">
+{% endblock %}
+
 {% block content %} 
 <h1>新規ログ作成</h1>
 
-<form method="post" action="/ui/logs/new">
-    <input type="hidden", name="csrf_token" value="{{ csrf_token }}">
-    <div>
-        <label>discography title</label><br />
+<form method="post" class="form" action="/ui/logs/new">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <div class="form-group">
+        <label>discography title</label>
         <select name="discography_id" required>
             <option value="">選択してください</option>
             {% for d in discographies %}
@@ -17,19 +23,19 @@
         </select>
     </div>
 
-    <div style="margin-top:8px;">
-        <label>listened_at</label><br />
+    <div class="form-group">
+        <label>listened_at</label>
         <input type="datetime-local" name="listened_at" 
         max="{{ now.strftime('%Y-%m-%dT%H:%M') }}" required/>
     </div>
 
-    <div style="margin-top:8px;">
-        <label>comment</label><br />
+    <div class="form-group">
+        <label>comment</label>
         <textarea name="comment" rows="3" maxlength="50"></textarea>
     </div>
 
-    <div style="margin-top:12px;">
-        <button type="submit">保存</button>
+    <div class="form-group">
+        <button type="submit" class="btn-primary">保存</button>
     </div>
 </form>
 <p style="margin-top:12px;">

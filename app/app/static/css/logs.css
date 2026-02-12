@@ -1,0 +1,147 @@
+/* =======入力フォーム関連======== */
+.form {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 32px;
+    background: #fbfbfcCC;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 0px;
+    opacity: 0.7;
+}
+
+.form-group select,
+.form-group input,
+.form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #888;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+.form-group select {
+    appearance: none;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.form-group input[type="datetime-local"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+/* =========ボタン関連======== */
+/* 投稿・編集ボタン */
+.btn-primary {
+    width: 60%;
+    align-self: center;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit; 
+    font-size: 1rem;
+    cursor: pointer;
+    background: #111;
+    color: #fff;
+    transition: background 0.2s ease;
+}
+.btn-primary:hover {
+    background: #333;
+}
+
+/* 削除ボタン */
+.btn-primary-delete {
+    display: block;
+    margin: 20px auto;
+    width: 20%;
+    align-items: center;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit; 
+    font-size: 1rem;
+    cursor: pointer;
+    background: #be4848;
+    color: #fff;
+    transition: background 0.2s ease;
+}
+.btn-primary-delete:hover {
+    background: #d07b7b;
+}
+
+/* =======ログ・タイムライン表示用=========== */
+.log-container {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.log-card {
+    border: 1px solid #F0ECE9;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 12px 0;
+    background: #F0ECE9;
+}
+
+.log-header {
+    display: flex; 
+    gap: 8px;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+/* 編集・削除ボタン　*/
+.log-action {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.log-action form {
+    margin: 0;
+}
+
+.action-btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #fbfbfc;
+    border-radius: 10px;
+    background: #fbfbfc;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.action-btn--danger {
+    color: #be4848;
+}
