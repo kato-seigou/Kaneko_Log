@@ -11,3 +11,5 @@ wheels/
 
 # 設計書
 01_design_documents/
+
+.env
