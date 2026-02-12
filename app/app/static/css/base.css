@@ -6,12 +6,45 @@ html, body {
     height: 100%;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
     margin: 0;
     font-family: "\6E38\660E\671D", YuMincho, "Hiragino Mincho ProN W3", "\30D2\30E9\30AE\30CE\660E\671D   ProN W3", "Hiragino Mincho ProN", "HG\660E\671D  E", "\FF2D\FF33   \FF30\660E\671D", "\FF2D\FF33   \660E\671D", serif;
     background-color: #EAE6E2;
     color: #111;
     line-height: 1.5;
+}
+
+.page-header {
+    position: sticky;   /* ← これおすすめ */
+    top: 0;
+    background: none;
+    padding: 8px 0;
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.page-title {
+    margin: 0
+}
+.toggle-btn {
+    position: static;
+    top: auto;
+    right: auto;
+    left: auto;
+    margin: 0;
+
+    font-size: 24px;
+    background: none;
+    border: none;
+    padding: 8px 10px;
+    cursor: pointer;
+    color: #111;
 }
 
 a {
@@ -45,23 +78,6 @@ a:hover { text-decoration: underline;}
     transform: translateX(100%);
     transition: transform 0.25s ease;
     overflow: auto;
-}
-
-.toggle-btn {
-    position: fixed;
-    top: 12px;
-    right: 16px;
-    left: auto;
-    z-index: 1100;   /* sidebar(1000)とbackdrop(999)より上 */
-    margin: 0;
-
-    font-size: 24px;
-    background: none;
-    border: none;
-    padding: 8px 10px;
-    cursor: pointer;
-
-    color: #111;
 }
 
 /* 開いたら表示（本文は動かない） */

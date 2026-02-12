@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content %}
-<h1>新規アカウント登録</h1>
+<header class="page-header">
+  <h1 class="page-title">新規アカウント登録</h1>
+  <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
+</header>
 
 {% if error %}
   <p style="color:red;">{{ error }}</p>

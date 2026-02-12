@@ -2,7 +2,10 @@
 {% block title %}Discography 登録{% endblock %}
 
 {% block content %}
-<h1>新規ディスコグラフィ登録</h1>
+<header class="page-header">
+  <h1 class="page-title">新規ディスコグラフィ登録</h1>
+  <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
+</header>
 
 {% if error %}
   <p style="color:red;">{{ error }}</p>

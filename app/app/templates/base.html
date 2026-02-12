@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="{{ url_for('static', path='css/base.css') }}">
     {% block head %}{% endblock %}
 </head>
+
 <body>
     <main class="container">
-        <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
         <div class="flash-container" aria-live="polite" aria-atomic="true">
             {% if flash_success %}
                 <div class="flash flash--success">{{ flash_success }}</div>
@@ -72,6 +72,8 @@
     });
     </script>
 
-    <footer class="site-footer"></footer>
+    <footer class="site-footer">
+        作った人は加藤です
+    </footer>
 </body>
 </html>

@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content %}
-<h1>My Logs</h1>
+<header class="page-header">
+  <h1 class="page-title">My Logs</h1>
+  <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
+</header>
 
 <p>ログイン中: {{ user.display_name }} @{{ user.login_id }}</p>
 
@@ -28,12 +31,12 @@
 
         <!--ボタンの大きさをそろえたい-->
         <div class="log-action">
-          <form method="get" action="ui/logs/{{ log.log_id }}/edit">
+          <form method="get" action="/ui/logs/{{ log.log_id }}/edit">
             <button type="submit" class="action-btn">編集</button>
           </form>
 
-          <form method="post" action="ui/logs/{{ log.log_id }}/delete"
-            onsubmit="return confirm（'このログを削除します。よろしいですか？'）">
+          <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+            onsubmit="return confirm('このログを削除します。よろしいですか？')">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <button type="submit" class="action-btn action-btn--danger">削除</button>
           </form>

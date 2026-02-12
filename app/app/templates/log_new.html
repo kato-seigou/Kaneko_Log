@@ -6,7 +6,10 @@
 {% endblock %}
 
 {% block content %} 
-<h1>新規ログ作成</h1>
+<header class="page-header">
+    <h1 class="page-title">新規ログ作成</h1>
+    <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
+</header>
 
 <form method="post" class="form" action="/ui/logs/new">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
