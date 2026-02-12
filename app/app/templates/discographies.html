@@ -28,10 +28,16 @@
           {% if d.playtime_seconds is none %}
             -
           {% else %}
-            {{ d.playtime_seconds }} 秒
+            {{ d.playtime_seconds / 60 }} 分
           {% endif %}
         </td>
-        <td>{{ d.discography_num }}</td>
+        <td>
+          {% if d.discography_num is none %}
+            -
+          {% else %}
+            {{ d.discography_num }} 曲
+          {% endif %}
+        </td>
 
         {% if user and user.is_admin %}
           <td>
