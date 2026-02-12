@@ -1,4 +1,3 @@
-# scripts/make_admin.py
 from app.app.database import SessionLocal
 from app.app import models
 

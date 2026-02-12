@@ -11,7 +11,7 @@ from .routers.ui import discographies as ui_disco
 from .routers.ui import timeline as ui_timeline
 
 # DBテーブル作成
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="kanekoayano App API")
 
