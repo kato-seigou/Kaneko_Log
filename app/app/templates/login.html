@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
+
 <h1>ログイン</h1>
 
 {% if error %}
@@ -9,19 +14,21 @@
 
 <form method="post" action="/ui/login">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-  <div>
-    <label>login_id</label><br />
+  
+  <div class="form-group">
+    <label>login_id</label>
     <input name="login_id" required />
   </div>
 
-  <div style="margin-top: 8px;">
-    <label>password</label><br />
+  <div class="form-group">
+    <label>password</label>
     <input type="password" name="password" required />
   </div>
 
-  <div style="margin-top: 12px;">
-    <button type="submit">ログイン</button>
+  <div class="form-group">
+    <button type="submit" class="btn-primary">ログイン</button>
   </div>
+
 </form>
 <p style="margin-top:12px;"><a href="/ui/register">新規登録</a></p>
 {% endblock %}

@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
-<h1>新規登録</h1>
+<h1>新規アカウント登録</h1>
 
 {% if error %}
   <p style="color:red;">{{ error }}</p>
@@ -9,25 +13,31 @@
 
 <form method="post" action="/ui/register">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-  <div>
-    <label>login_id</label><br />
-    <input name="login_id" required />
+
+  <div class="form-group">
+    <label>login_id<span class="required">*</span></label>
+    <input name="login_id" placeholder="12文字以内の半角英数字（必須）" required />
   </div>
-  <div style="margin-top:8px;">
-    <label>display_name</label><br />
-    <input name="display_name" />
+
+  <div class="form-group">
+    <label>display_name</label>
+    <input name="display_name" placeholder="12文字以内（任意）"/>
   </div>
-  <div style="margin-top:8px;">
-    <label>password</label><br />
-    <input type="password" name="password" required />
+
+  <div class="form-group">
+    <label>password<span class="required">*</span></label>
+    <input type="password" name="password" placeholder="12文字以内の半角英数字・記号（必須）" required />
   </div>
-  <div style="margin-top:8px;">
-    <label>password（確認）</label><br />
-    <input type="password" name="password_confirm" required />
+
+  <div class="form-group">
+    <label>password（確認用）<span class="required">*</span></label>
+    <input type="password" name="password_confirm" placeholder="上記と同じパスワードを入力"required />
   </div>
-  <div style="margin-top:12px;">
-    <button type="submit">登録</button>
+
+  <div class="form-group">
+    <button type="submit" class="btn-primary">登録</button>
   </div>
+
 </form>
 <p style="margin-top:12px;"><a href="/ui/login">ログインへ戻る</a></p>
 {% endblock %}
