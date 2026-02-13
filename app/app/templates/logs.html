@@ -29,7 +29,6 @@
           {{ log.listened_at.strftime("%Y-%m-%d %H:%M") }}
         </span>
 
-        <!--ボタンの大きさをそろえたい-->
         <div class="log-action">
           <form method="get" action="/ui/logs/{{ log.log_id }}/edit">
             <button type="submit" class="action-btn">編集</button>
@@ -42,17 +41,13 @@
           </form>
         </div>
 
-
-
       </div>
       <!-- header end-->
 
       <!-- title start-->
       <div style="margin-top: 8px; font-size: 1.05rem;">🎧{{ log.discography.discography_title }}</div>
       <!-- title end-->
-
       <div class="log-comment">{{ log.comment or ""}}</div>
-      
     </div>
     <!--log card end-->
 
