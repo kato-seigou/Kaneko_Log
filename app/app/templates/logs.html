@@ -44,10 +44,11 @@
       </div>
       <!-- header end-->
 
-      <!-- title start-->
-      <div style="margin-top: 8px; font-size: 1.05rem;">🎧{{ log.discography.discography_title }}</div>
-      <!-- title end-->
-      <div class="log-comment">{{ log.comment or ""}}</div>
+      
+      <div class="log-body">
+        🎧 {{ log.discography.discography_title }}</br>
+        {{ log.comment or ""}}
+      </div>
     </div>
     <!--log card end-->
 
