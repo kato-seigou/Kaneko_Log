@@ -3,7 +3,7 @@
     max-width: 420px;
     margin: 40px auto;
     padding: 32px;
-    background: #fbfbfcCC;
+    background: #EFECE9;
     border-radius: 14px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 }
@@ -102,11 +102,15 @@
 }
 
 .log-card {
-    border: 1px solid #F0ECE9;
+    border: none;
     border-radius: 12px;
     padding: 12px 14px;
     margin: 12px 0;
-    background: #F0ECE9;
+    background: #F5F3F1;
+}
+
+.log-card:hover {
+    background: #EFECE9;
 }
 
 .log-header {
