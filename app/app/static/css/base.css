@@ -179,3 +179,10 @@ a:hover { text-decoration: underline;}
     padding-left: 0;
     text-indent: 0;
 }
+
+/* -----------footer----------- */
+footer {
+    text-align: center;
+    padding: 5px;
+    color: #000;
+}
