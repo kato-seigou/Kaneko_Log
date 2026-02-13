@@ -1,61 +1,56 @@
 {% extends "base.html" %}
 {% block title %}Discographies{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/discographies.css') }}">
+{% endblock %}
 
 {% block content %}
 <header class="page-header">
-  <h1 class="page-title">Discographies</h1>
-  <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
+    <h1 class="page-title">Discographies</h1>
+    <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
 </header>
 
-<table border="1" cellpadding="6">
-  <thead>
-    <tr>
-      <th>タイトル</th>
-      <th>種別</th>
-      <th>発売日</th>
-      <th>再生時間</th>
-      <th>曲数</th>
-      {% if user and user.is_admin %}
-        <th>管理</th>
-      {% endif %}
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for d in discographies %}
-      <tr>
-        <td>{{ d.discography_title }}</td>
-        <td>{{ d.discography_type }}</td>
-        <td>{{ d.released_date }}</td>
-        <td>
-          {% if d.playtime_seconds is none %}
-            -
-          {% else %}
-            {{ d.playtime_seconds / 60 }} 分
-          {% endif %}
-        </td>
-        <td>
-          {% if d.discography_num is none %}
-            -
-          {% else %}
-            {{ d.discography_num }} 曲
-          {% endif %}
-        </td>
-
-        {% if user and user.is_admin %}
-          <td>
-            <a href="/ui/discographies/{{ d.discography_id }}/edit">編集</a>
-          </td>
-        {% endif %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
 {% if user and user.is_admin %}
-  <p style="margin-top:12px;">
+<p style="margin-top:12px;">
     <a href="/ui/discographies/new">新規登録</a>
-  </p>
+</p>
 {% endif %}
+
+<div class ="disco-container">
+    {% for d in discographies %}
+
+        <!-- disco card start -->
+        <div class="disco-card">
+            <div class="disco-header">
+                <strong>{{ d.discography_title }}</strong>
+                {% if user.is_admin %}
+                    <div class="disco-action">
+                        <form method="get" action="/ui/discographies/{{ d.discography_id }}/edit">
+                            <button type="submit" class="action-btn">編集</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="disco-info">
+                リリース: {{ d.released_date }}</br>
+                タイプ: {{ d.discography_type }}</br>
+
+                {% if d.discography_num is none %}
+                不明 </br>
+                {% else %}
+                曲数: {{ d.discography_num }}曲</br>
+                {% endif %}
+
+                {% if d.playtime_seconds is none %}
+                不明 </br>
+                {% else %}
+                再生時間: {{ (d.playtime_seconds / 60) | int }}分 </br>
+                {% endif %}
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock %}
