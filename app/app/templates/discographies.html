@@ -22,7 +22,15 @@
         <!-- disco card start -->
         <div class="disco-card">
             <div class="disco-header">
+
+                {% if d.discography_link is none %}
+                <!-- リンクなしの場合はそのまま表示 -->
                 <strong>{{ d.discography_title }}</strong>
+                {% else %}
+                <!-- リンクありの場合はタイトルを踏んだらサービスのリンクに移る -->
+                <strong><a href={{ d.discography_link }} target="_blank" rel="noopener noreferrer">{{ d.discography_title }}</a></strong>
+                {% endif %}
+
                 {% if user.is_admin %}
                     <div class="disco-action">
                         <form method="get" action="/ui/discographies/{{ d.discography_id }}/edit">

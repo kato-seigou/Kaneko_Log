@@ -66,6 +66,7 @@ def create_discographies_action(
     discography_type: str = Form(...),
     released_date: date = Form(...),
     playtime_seconds: str | None = Form(None),
+    discography_link: str | None = Form(None),
     db: Session = Depends(get_db),
     admin_user: models.User = Depends(require_admin_from_cookie),
     csrf_token: str = Form(...)
@@ -77,7 +78,8 @@ def create_discographies_action(
             discography_num=int(discography_num) if discography_num else None,
             discography_type=discography_type,
             released_date=released_date,
-            playtime_seconds= int(playtime_seconds) if playtime_seconds else None
+            playtime_seconds=int(playtime_seconds) if playtime_seconds else None,
+            discography_link=discography_link if discography_link else None,
         )
         crud.create_discography(db=db, discography=discography_in)
     except Exception as e:
@@ -135,8 +137,9 @@ def edit_discography_action(
     discography_title: str = Form(...),
     discography_type: str = Form(...),
     released_date: date = Form(...),
-    discography_num: int = Form(...),
-    playtime_seconds: Optional[int] = Form(None),   
+    discography_num: Optional[int] = Form(None),
+    playtime_seconds: Optional[int] = Form(None),  
+    discography_link: Optional[str] = Form(None), 
     admin_user: models.User = Depends(require_admin_from_cookie),
     csrf_token: str = Form(...)
 ):
@@ -150,7 +153,8 @@ def edit_discography_action(
                 discography_type=discography_type,
                 released_date=released_date,
                 discography_num=discography_num,
-                playtime_seconds=playtime_seconds
+                playtime_seconds=playtime_seconds,
+                discography_link=discography_link
             )
         )
         return RedirectResponse(url="/ui/discographies", status_code=303)

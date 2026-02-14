@@ -28,7 +28,14 @@
       <!-- 内容 -->
       </div>
       <div class="log-body">
-        🎧 {{ log.discography.discography_title }}</br>
+        {% if log.discography.discography_link is none %}
+        🎧 {{ log.discography.discography_title }}<br>
+        {% else %}
+        <a href="{{ log.discography.discography_link }}" target="_blank" rel="noopener noreferrer">
+        🎧 {{ log.discography.discography_title }}
+        </a><br>
+        {% endif %}
+
         {{ log.comment or '' }}
       </div>
     </div>
