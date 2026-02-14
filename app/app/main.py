@@ -1,11 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.exceptions import HTTPException
+from starlette.status import HTTP_404_NOT_FOUND
+from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine
 from .routers import auth, discography, logs
+from .routers.ui import _deps
 from .routers.ui import auth as ui_auth
+from .routers.ui import auth
 from .routers.ui import logs as ui_logs
 from .routers.ui import discographies as ui_disco
 from .routers.ui import timeline as ui_timeline
@@ -17,6 +22,8 @@ from .routers.ui import account as ui_account
 app = FastAPI(title="kanekoayano App API")
 
 app.mount("/static", StaticFiles(directory="app/app/static"), name="static")
+
+templates = Jinja2Templates(directory="app/app/templates")
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,7 +46,17 @@ app.include_router(ui_account.router)
 def root():
     return RedirectResponse(url="/ui/login", status_code=303)
 
-
 @app.get("/health")
 def health():
     return {"status": "OK"}
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc: HTTPException):
+    token = request.cookies.get(auth.COOKIE_NAME)
+    logged_in = bool(token)
+        
+    return templates.TemplateResponse(
+        "404.html",
+        {"request": request, "logged_in": logged_in},
+        status_code=HTTP_404_NOT_FOUND,
+    )

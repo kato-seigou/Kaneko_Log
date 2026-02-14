@@ -5,6 +5,8 @@ from fastapi import HTTPException, status
 from fastapi.responses import Response
 from starlette.requests import Request
 
+from ... import settings
+
 CSRF_COOKIE_NAME = "csrf_token"
 
 def ensure_csrf_token(request: Request, response: Response) -> str:
@@ -17,7 +19,7 @@ def ensure_csrf_token(request: Request, response: Response) -> str:
         response.set_cookie(
             key=CSRF_COOKIE_NAME,
             value=token,
-            max_age=60 * 60 * 24,
+            max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
             httponly=True,
             samesite="lax",
             secure=False,

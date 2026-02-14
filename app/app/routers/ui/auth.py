@@ -11,7 +11,7 @@ from ._render import render
 from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 from ._csrf import ensure_csrf_token, validate_csrf
 from ...database import get_db
-from ... import crud, security, schemas
+from ... import crud, security, schemas, settings
 
 router = APIRouter(prefix="/ui", tags=["ui"])
 
@@ -66,7 +66,7 @@ def login_action(
         httponly=True,
         samesite="lax",
         secure=False,
-        max_age=60 * 60,
+        max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         path="/"
     )
     # return response
