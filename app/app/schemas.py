@@ -27,6 +27,14 @@ class UserRead(UserBase):
     
     # pydantic: v2.8.2
     model_config = ConfigDict(from_attributes=True)
+
+class UserProfileUpdate(BaseModel):
+    display_name: str | None = Field(default=None, max_length=12)
+    login_id: str | None = Field(default=None, max_length=12)
+
+class UserPasswordUpdate(BaseModel):
+    current_password: str | None = Field(min_length=8, max_length=72)
+    new_password: str | None = Field(min_length=8, max_length=72)
     
 ### discography関連
 class DiscographyType(str, Enum):

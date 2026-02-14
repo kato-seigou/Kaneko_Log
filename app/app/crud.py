@@ -9,6 +9,9 @@ from . import models, schemas, security
 # ここでDBの操作を行う
 
 # GET系
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.user_id == user_id).first()
+
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).order_by(models.User.user_id).offset(skip).limit(limit).all()
 
@@ -103,6 +106,44 @@ def create_log(db: Session, user_id: int, log: schemas.ListenLogCreate):
         return db_log
 
 # UPDATE
+def update_user_profile(db: Session, user_id: int, upd: schemas.UserProfileUpdate):
+    db_user = (
+        db.query(models.User)
+        .filter(models.User.user_id == user_id)
+        .first()
+    )
+    if db_user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ユーザーが見つかりませんでした")
+    
+    if upd.login_id is not None:
+        db_user.login_id = upd.login_id
+    if upd.display_name is not None:
+        db_user.display_name = upd.display_name
+        
+    try: 
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="login_idが既に使われています"
+        )
+    db.refresh(db_user)
+    return db_user
+        
+def update_user_password(db: Session, user_id: int, upd: schemas.UserPasswordUpdate):
+    db_user = db.query(models.User).filter(models.User.user_id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="ユーザーが見つかりません")
+    
+    if not security.verify_password(upd.current_password, db_user.password_hash):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="現在のパスワードが違います")
+    
+    db_user.password_hash = security.hash_password(upd.new_password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
 def update_log(db: Session, user_id: int, log_id: int, log_update: schemas.ListenLogUpdate):
     db_log = (
         db.query(models.ListenLog)

@@ -37,13 +37,13 @@
                 タイプ: {{ d.discography_type }}</br>
 
                 {% if d.discography_num is none %}
-                不明 </br>
+                曲数: 不明 </br>
                 {% else %}
                 曲数: {{ d.discography_num }}曲</br>
                 {% endif %}
 
                 {% if d.playtime_seconds is none %}
-                不明 </br>
+                再生時間: 不明 </br>
                 {% else %}
                 再生時間: {{ (d.playtime_seconds / 60) | int }}分 </br>
                 {% endif %}
