@@ -27,6 +27,7 @@ class Discography(Base):
     discography_type = Column(String, nullable=False, unique=False)
     released_date = Column(Date, nullable=False, unique=False)
     playtime_seconds = Column(Integer, nullable=True, unique=False)
+    discography_link = Column(String, nullable=True, unique=False)
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
