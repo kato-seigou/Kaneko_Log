@@ -28,7 +28,7 @@ def get_logs(db: Session, user_id: Optional[int] = None, skip: int = 0, limit: i
     q = db.query(models.ListenLog).filter(models.ListenLog.deleted_at.is_(None))
     if user_id is not None:
         q = q.filter(models.ListenLog.user_id == user_id)
-    return q.order_by(models.ListenLog.created_at.desc()).offset(skip).limit(limit).all()
+    return q.order_by(models.ListenLog.listened_at.desc()).offset(skip).limit(limit).all()
 
 # 1件取得用
 def get_log(db: Session, user_id: int, log_id: int):

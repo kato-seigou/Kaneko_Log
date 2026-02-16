@@ -60,6 +60,7 @@
           <!-- コメント -->
           {{ log.comment or ""}}
         </div>
+
       </div>
       <!--log card end-->
 
@@ -71,6 +72,20 @@
     最初のログを記録してみましょう。
   </div>
   {% endif %}
+
+  <!-- ログがn件を超える場合に、ページングできるようにする -->
+  <div class="before">
+    {% if skip > 0 %}
+      <a href="/ui/logs?skip={{ [skip - limit, 0] | max }}&limit={{ limit }}">前へ</a>
+    {% endif %}
+  </div>
+
+  <div class="next">
+    {% if has_next %}
+      <a href="/ui/logs?skip={{ skip + limit }}&limit={{ limit }}">次へ</a>
+    {% endif %}
+  </div>
+
 </div>
 
 {% endblock %}

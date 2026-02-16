@@ -164,3 +164,8 @@
 .action-btn--danger {
     color: #be4848;
 }
+
+/* ページング */
+.next {
+    text-align: right;
+}

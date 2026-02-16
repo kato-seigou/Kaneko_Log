@@ -22,10 +22,10 @@ def timeline_page(
         resp = RedirectResponse(url="/ui/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
-    logs = crud.get_timeline_logs(db=db, skip=skip, limit=limit)
+    log_plus = crud.get_timeline_logs(db=db, skip=skip, limit=limit + 1)
     
-    next_skip = skip + limit
-    has_more = len(logs) == limit
+    has_next = len(log_plus) > limit
+    logs = log_plus[:limit]
     
     return templates.TemplateResponse(
         "timeline.html",
@@ -35,7 +35,6 @@ def timeline_page(
             "logs": logs,
             "skip": skip,
             "limit": limit,
-            "next_skip": next_skip,
-            "has_more": has_more
+            "has_next": has_next,
         }
     )

@@ -22,22 +22,26 @@ def logs_page(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user_from_cookie_optional),
     skip: int = 0,
-    limit: int = 100
+    limit: int = 5,
 ):
     
     if current_user is None:
         resp = RedirectResponse(url="/ui/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
-    logs = crud.get_logs(
-        db=db, user_id=current_user.user_id, skip=skip, limit=limit
+    logs_plus = crud.get_logs(
+        db=db, user_id=current_user.user_id, skip=skip, limit=limit + 1
     )
+    
+    # limitよりもlogs_plusが大きければ次ページがあると言える
+    has_next = len(logs_plus) > limit
+    logs = logs_plus[:limit]
+    
     return render(
         request=request, 
         name="logs.html", 
-        context={"user": current_user, "logs": logs}
+        context={"user": current_user, "logs": logs, "skip": skip, "limit": limit, "has_next": has_next}
     )
-    
     
 @router.get("/logs/new")
 def new_log_page(
