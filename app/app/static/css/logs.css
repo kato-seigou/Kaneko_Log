@@ -99,6 +99,8 @@
 .log-container {
     max-width: 720px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .log-card {
@@ -124,6 +126,13 @@
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.no-log {
+    margin: auto;
+    text-align: center;
+    line-height: 1.8;
+    opacity: 0.75;
 }
 
 /* 編集・削除ボタン　*/

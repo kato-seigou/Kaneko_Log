@@ -11,11 +11,24 @@ html {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
     margin: 0;
     font-family: "\6E38\660E\671D", YuMincho, "Hiragino Mincho ProN W3", "\30D2\30E9\30AE\30CE\660E\671D   ProN W3", "Hiragino Mincho ProN", "HG\660E\671D  E", "\FF2D\FF33   \FF30\660E\671D", "\FF2D\FF33   \660E\671D", serif;
     background-color: #EAE6E2;
     color: #111;
     line-height: 1.5;
+}
+
+.page-main {
+    flex: 1;
+}
+.page-inner {
+    width: 90%;
+    margin: 0 auto;
+    padding: 16px 0;
 }
 
 .page-header {
@@ -53,14 +66,7 @@ a {
 }
 a:hover { text-decoration: underline;}
 
-/* サイドバー概観 */
-/* 本文は固定：レイアウトを動かさない */
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 16px;
-}
-
+/* ---------------サイドバー概観----------------- */
 /* サイドバーは画面に固定して“上に被せる” */
 .sidebar {
     position: fixed;
@@ -131,8 +137,7 @@ a:hover { text-decoration: underline;}
     font-weight: 700;
 }
 
-/* Flash */
-
+/* --------------Flash---------------- */
 .flash {
     border-radius: 12px;
     padding: 10px 12px;
@@ -185,7 +190,13 @@ footer {
     text-align: center;
     padding: 5px;
     color: #000;
+    padding: 20px;
 }
+
+.site-footer{
+    margin-top: auto;
+}
+
 
 /* ---------error page----------- */
 .error-container {

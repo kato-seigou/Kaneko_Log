@@ -17,52 +17,60 @@
 </p>
 
 <div class="log-container">
-  {% for log in logs %}
-    <!-- log card start -->
-    <div class="log-card">
+  {% if logs %}
+    {% for log in logs %}
+      <!-- log card start -->
+      <div class="log-card">
 
-      <!-- header start-->
-      <div class="log-header">
-        <strong>{{ log.user.display_name or "NoName" }}</strong>
-        <span style="color: #666;">@{{ log.user.login_id }}</span>
-        <span style="color: #999; margin-left: auto">
-          {{ log.listened_at.strftime("%Y-%m-%d %H:%M") }}
-        </span>
+        <!-- header start-->
+        <div class="log-header">
+          <strong>{{ log.user.display_name or "NoName" }}</strong>
+          <span style="color: #666;">@{{ log.user.login_id }}</span>
+          <span style="color: #999; margin-left: auto">
+            {{ log.listened_at.strftime("%Y-%m-%d %H:%M") }}
+          </span>
 
-        <div class="log-action">
-          <form method="get" action="/ui/logs/{{ log.log_id }}/edit">
-            <button type="submit" class="action-btn">編集</button>
-          </form>
+          <div class="log-action">
+            <form method="get" action="/ui/logs/{{ log.log_id }}/edit">
+              <button type="submit" class="action-btn">編集</button>
+            </form>
 
-          <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
-            onsubmit="return confirm('このログを削除します。よろしいですか？')">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit" class="action-btn action-btn--danger">削除</button>
-          </form>
+            <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+              onsubmit="return confirm('このログを削除します。よろしいですか？')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button type="submit" class="action-btn action-btn--danger">削除</button>
+            </form>
+          </div>
+
         </div>
+        <!-- header end-->
 
+        
+        <div class="log-body">
+          <!-- ディスコグラフィ -->
+          {% if log.discography.discography_link is none %}
+          🎧 {{ log.discography.discography_title }}<br>
+          {% else %}
+          <a href="{{ log.discography.discography_link }}" target="_blank" rel="noopener noreferrer">
+          🎧 {{ log.discography.discography_title }}
+          </a><br>
+          {% endif %}
+
+
+          <!-- コメント -->
+          {{ log.comment or ""}}
+        </div>
       </div>
-      <!-- header end-->
+      <!--log card end-->
 
-      
-      <div class="log-body">
-        <!-- ディスコグラフィ -->
-        {% if log.discography.discography_link is none %}
-        🎧 {{ log.discography.discography_title }}<br>
-        {% else %}
-        <a href="{{ log.discography.discography_link }}" target="_blank" rel="noopener noreferrer">
-        🎧 {{ log.discography.discography_title }}
-        </a><br>
-        {% endif %}
-
-
-        <!-- コメント -->
-        {{ log.comment or ""}}
-      </div>
-    </div>
-    <!--log card end-->
-
-  {% endfor %}
+    {% endfor %}
+  
+  {% else %}
+  <div class="no-log">
+    まだログはありません。</br>
+    最初のログを記録してみましょう。
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}
