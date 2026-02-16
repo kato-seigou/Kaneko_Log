@@ -10,20 +10,22 @@
 </head>
 
 <body>
-    <main class="container">
-        <div class="flash-container" aria-live="polite" aria-atomic="true">
-            {% if flash_success %}
-                <div class="flash flash--success">{{ flash_success }}</div>
-            {% endif %}
-            {% if flash_error %}
-                <div class="flash flash--error">{{ flash_error }}</div>
-            {% endif %}
-            {% if flash_info %}
-                <div class="flash flash--info">{{ flash_info }}</div>
-            {% endif %}
-        </div>
+    <main class="page-main">
+        <div class="page-inner">
+            <div class="flash-container" aria-live="polite" aria-atomic="true">
+                {% if flash_success %}
+                    <div class="flash flash--success">{{ flash_success }}</div>
+                {% endif %}
+                {% if flash_error %}
+                    <div class="flash flash--error">{{ flash_error }}</div>
+                {% endif %}
+                {% if flash_info %}
+                    <div class="flash flash--info">{{ flash_info }}</div>
+                {% endif %}
+            </div>
 
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <!-- クリックで閉じる用の背景 -->
@@ -74,8 +76,10 @@
     </script>
 
     <footer class="site-footer">
-        © 2026 Kaneko Ayano App </br>
-        Not affiliated with the artist.
+        <div class="page-inner">
+            © 2026 Kaneko Ayano App </br>
+            Not affiliated with the artist.
+        </div>
     </footer>
 </body>
 </html>

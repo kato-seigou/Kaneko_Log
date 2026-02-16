@@ -7,6 +7,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine
+from .routers.ui._render import render
+from .routers.ui._deps import get_current_user_from_cookie
 from .routers import auth, discography, logs
 from .routers.ui import _deps
 from .routers.ui import auth as ui_auth
@@ -42,9 +44,19 @@ app.include_router(ui_disco.router)
 app.include_router(ui_timeline.router)
 app.include_router(ui_account.router)
 
+# @app.get("/")
+# def root():
+#     return RedirectResponse(url="/ui/login", status_code=303)
 @app.get("/")
-def root():
-    return RedirectResponse(url="/ui/login", status_code=303)
+def home_page(request: Request):
+    token = request.cookies.get(auth.COOKIE_NAME)
+    if token:
+        return RedirectResponse(url="/ui/logs", status_code=303)
+    return render(
+        request=request,
+        name="home.html",
+        context={"user": None}
+    )
 
 @app.get("/health")
 def health():
