@@ -49,13 +49,14 @@ def search_logs_page(
     request: Request,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user_from_cookie),
-    start_period: date | None = Query(None),
-    end_period: date | None = Query(None),
+    start_period: str | None = Query(None),
+    end_period: str | None = Query(None),
     search_title: List[str] | None = Query(None),
     search_type: List[str] | None = Query(None),
     skip: int = Query(0),
     limit: int = Query(2),
 ):
+
     print("DEBUG", start_period, end_period, search_title, search_type, skip, limit)
 
     if current_user is None:
@@ -65,10 +66,8 @@ def search_logs_page(
     discographies = crud.get_discographies(db=db)
     
     # datetime型に変換する
-    if start_period:
-        start_period = datetime.combine(start_period, time.min)
-    if end_period:
-        end_period = datetime.combine(end_period, time.max)
+    start_period = date.fromisoformat(start_period) if start_period else None
+    end_period = date.fromisocalendar(end_period) if end_period else None
     
     log_plus = crud.search_logs(
         db=db,
