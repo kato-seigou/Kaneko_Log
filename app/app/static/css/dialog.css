@@ -1,0 +1,119 @@
+.search-btn{
+    padding:8px 12px;
+    border: none;
+    background:#fff;
+    border-radius:8px;
+    cursor:pointer;
+    font-family: inherit;
+    background: #111;
+    color: #fff;
+    transition: background 0.2s ease;
+}
+.search-btn:hover {
+    background: #333;
+}
+
+.search-btn--clear{
+    background: #be4848;
+    color: #fff
+}
+.search-btn--clear:hover {
+    background: #d07b7b
+}
+
+.dialog{
+    width:min(720px, 92vw);
+    border:none;
+    border-radius:16px;
+    padding:32;
+    background: #EFECE9;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.dialog::backdrop{
+    background:rgba(0,0,0,0.35);
+}
+
+.dialog__form{
+    padding:14px 16px;
+}
+
+.dialog__header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:10px;
+    border-bottom:1px solid #eee;
+}
+
+.dialog__title{
+    margin:0;
+    font-size:1.1rem;
+}
+
+.dialog__close{
+    border:none;
+    background:transparent;
+    font-size:1.4rem;
+    cursor:pointer;
+}
+.dialog__close:hover{
+    color:#be4848
+}
+
+
+.dialog__body{
+    padding:12px 0;
+    display:grid;
+    gap:12px;
+}
+
+.form-row label{
+    display:block;
+    font-size:0.9rem;
+    color:#444;
+    margin-bottom:6px;
+}
+
+.form-row input[type="date"]{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-family: inherit;
+}
+
+.scroll-box{
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:10px;
+    max-height:240px;
+    overflow:auto;
+    background:#fff;
+}
+
+.check{
+    display:flex;
+    gap:10px;
+    padding:6px 0;
+}
+input[type="checkbox"] {
+  accent-color: #111;  /* 好きな色 */
+}
+
+.chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.chip{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid #ddd;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#fff;
+}

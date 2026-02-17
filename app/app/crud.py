@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session , joinedload
 from sqlalchemy.exc import IntegrityError
@@ -37,6 +37,33 @@ def get_log(db: Session, user_id: int, log_id: int):
     if db_log is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ログが見つかりませんでした")
     return db_log
+
+# ログ検索用
+def search_logs(
+    db: Session, 
+    user_id: int, 
+    start_period: Optional[datetime] = None, 
+    end_period: Optional[datetime] = None,
+    search_title: Optional[List[str]] = None, 
+    search_type: Optional[List[str]] = None,
+    skip: int = 0,
+    limit: int = 100,
+    ):
+    q = (
+        db.query(models.ListenLog)
+        .join(models.Discography, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id, models.ListenLog.deleted_at.is_(None))
+    )
+    if start_period:
+        q = q.filter(models.ListenLog.listened_at >= start_period)
+    if end_period:
+        q = q.filter(models.ListenLog.listened_at <= end_period)  
+    if search_title:
+        q = q.filter(models.Discography.discography_title.in_(search_title))
+    if search_type:
+        q = q.filter(models.Discography.discography_type.in_(search_type))  
+    logs = q.order_by(models.ListenLog.listened_at.desc()).offset(skip).limit(limit).all()
+    return logs
 
 # タイムライン用の取得関数
 def get_timeline_logs(db: Session, skip: int = 0, limit: int = 20):

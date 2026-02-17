@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import List, Optional
 from datetime import datetime
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import RedirectResponse
@@ -42,7 +43,33 @@ def logs_page(
         name="logs.html", 
         context={"user": current_user, "logs": logs, "skip": skip, "limit": limit, "has_next": has_next}
     )
+
+@router.get("/logs/search")
+def search_logs_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user_from_cookie)
+):
+    if current_user is None:
+        resp = RedirectResponse(url="/ui/login", status_code=303)
+        return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
+    discographies = crud.get_discographies(db=db)
+    
+    return render(
+        request=request,
+        name="log_search.html",
+        context={
+            "user": current_user,
+            "discographies": discographies,
+            "logs": [],
+            "skip": 0,
+            "limit": 20,
+            "has_next": False,
+            "date_now": datetime.today().date(),
+        },
+    )
+
 @router.get("/logs/new")
 def new_log_page(
     request: Request,
@@ -70,18 +97,6 @@ def edit_log_page(
 ):
     log = crud.get_log(db=db, user_id=current_user.user_id, log_id=log_id)
     discographies = crud.get_discographies(db=db)
-    
-    # return templates.TemplateResponse(
-    #     "log_edit.html",
-    #     {
-    #         "request": request,
-    #         "user": current_user,
-    #         "log": log,
-    #         "discographies": discographies,
-    #         "error": None,
-    #         "now": datetime.now()
-    #     }
-    # )
     return render(
         request=request,
         name="log_edit.html",
@@ -175,4 +190,59 @@ def delete_log_action(
         url="/ui/logs",
         message="ログを削除しました",
         level=FLASH_ERROR
+    )
+    
+@router.post("/logs/search")
+def search_log_action(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user_from_cookie),
+    start_period: Optional[datetime] = Form(None),
+    end_period: Optional[datetime] = Form(None),
+    search_title: Optional[List[str]] = Form(None),
+    search_type: Optional[List[str]] = Form(None),
+    skip: int = 0,
+    limit: int = 2,
+):
+    if current_user is None:
+        resp = RedirectResponse(url="/ui/login", status_code=303)
+        return add_flash(resp, "ログインしてください", level=FLASH_INFO)
+    
+    discographies = crud.get_discographies(db=db)
+    
+    log_plus = crud.search_logs(
+        db=db,
+        user_id=current_user.user_id,
+        start_period=start_period,
+        end_period=end_period,
+        search_title=search_title,
+        search_type=search_type,
+        skip=skip,
+        limit=limit + 1
+    )
+    
+    has_next = len(log_plus) > limit
+    logs = log_plus[:limit]
+    
+    error = None
+    if not logs and skip == 0:
+        error ="対照のログが存在しません"
+
+    return render(
+        request=request,
+        name="log_search.html",
+        context={
+            "user": current_user,
+            "discographies": discographies,
+            "logs": logs,
+            "skip": skip,
+            "limit": limit,
+            "has_next": has_next,
+            "date_now": datetime.today().date(),
+            "start_period": start_period,
+            "end_period": end_period,
+            "search_title": search_title or [],
+            "search_type": search_type or [],
+            "error": error,
+        }
     )
