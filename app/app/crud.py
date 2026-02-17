@@ -53,7 +53,7 @@ def search_logs(
         db.query(models.ListenLog)
         .join(models.Discography, models.ListenLog.discography_id == models.Discography.discography_id)
         .filter(models.ListenLog.user_id == user_id, models.ListenLog.deleted_at.is_(None))
-    )
+    )  
     if start_period:
         q = q.filter(models.ListenLog.listened_at >= start_period)
     if end_period:

@@ -59,56 +59,54 @@
     {% endif %}
 </div>
 
+<div class="log-container">
 {% if logs %}
-    <div class="before">
+    <div class="before"> <!-- 前へボタンがあるとき -->
         {% if skip > 0 %}
-            <form method="post" action="/ui/logs/search">
-                <input type="hidden" name="skip" value="{{ [skip - limit, 0] | max }}">
-                <input type="hidden" name="limit" value="{{ limit }}">
-
-                <input type="hidden" name="start_period" value="{{ start_period or '' }}">
-                <input type="hidden" name="end_period" value="{{ end_period or '' }}">
-
-                {% for t in (search_title or []) %}
-                    <input type="hidden" name="search_title" value="{{ t }}">
-                {% endfor %}
-                {% for ty in (search_type or []) %}
-                    <input type="hidden" name="search_type" value="{{ ty }}">
-                {% endfor %}
-
-                <a href="/ui/logs/search?start_period={{ start_period }}&end_period={{ end_period }}&search_title={{ search_title }}&search_type={{ search_type }}&skip={{ skip }}&limit={{ limit }}">
-                    前へ
-                </a>
-            </form>
+            <a class="pager__btn"
+            href="/ui/logs/search?skip={{ skip - limit }}&limit={{ limit }}
+            {% if start_period %}&start_period={{ start_period }}{% endif %}
+            {% if end_period %}&end_period={{ end_period }}{% endif %}
+            {% if search_title %}
+                {% for t in search_title %}&search_title={{ t|urlencode }}{% endfor %}
+            {% endif %}
+            {% if search_type %}
+                {% for tp in search_type %}&search_type={{ tp|urlencode }}{% endfor %}
+            {% endif %}
+            ">
+            前へ
+            </a>
         {% endif %}
     </div>
 
     <div class="next">
-        {% if has_next %}
-            <form method="post" action="/ui/logs/search">
-                <input type="hidden" name="skip" value="{{ [skip + limit, 0] | max }}">
-                <input type="hidden" name="limit" value="{{ limit }}">
-
-                <input type="hidden" name="start_period" value="{{ start_period or '' }}">
-                <input type="hidden" name="end_period" value="{{ end_period or '' }}">
-
-                {% for t in (search_title or []) %}
-                    <input type="hidden" name="search_title" value="{{ t }}">
-                {% endfor %}
-                {% for ty in (search_type or []) %}
-                    <input type="hidden" name="search_type" value="{{ ty }}">
-                {% endfor %}
-
-                <a href="/ui/logs/search?start_period={{ start_period }}&end_period={{ end_period }}&search_title={{ search_title }}&search_type={{ search_type }}&skip={{ skip }}&limit={{ limit }}">
-                    次へ
-                </a>
-            </form>
+        {% if has_next %} <!-- 次へボタンがあるとき -->
+            <a class="pager__btn"
+            href="/ui/logs/search?skip={{ skip + limit }}&limit={{ limit }}
+            {% if start_period %}&start_period={{ start_period }}{% endif %}
+            {% if end_period %}&end_period={{ end_period }}{% endif %}
+            {% if search_title %}
+                {% for t in search_title %}&search_title={{ t|urlencode }}{% endfor %}
+            {% endif %}
+            {% if search_type %}
+                {% for tp in search_type %}&search_type={{ tp|urlencode }}{% endfor %}
+            {% endif %}
+            ">
+            次へ
+            </a>
         {% endif %}
     </div>
 {% endif %}
+</div>
 
 <dialog id="searchDialog" class="dialog">
-    <form method="post" action="/ui/logs/search" class="dialog__form">
+    <form method="get" action="/ui/logs/search" class="dialog__form"
+        onsubmit="
+            const sp=this.querySelector('input[name=start_period]');
+            const ep=this.querySelector('input[name=end_period]');
+            if (sp && !sp.value) sp.disabled = true;
+            if (ep && !ep.value) ep.disabled = true;
+        ">
         <div class="dialog__header">
             <h2 class="dialog__title">ログ検索</h2>
             <button id="closeSearch" class="dialog__close" type="button" aria-label="Close">×</button>
@@ -117,12 +115,12 @@
         <div class="dialog__body">
             <div class="form-row">
                 <label>検索開始日</label>
-                <input type="date" min="2012-05-01" max={{ date_now }} value="">
+                <input type="date" name="start_period" min="2012-05-01" max="{{ date_now }}" value="">
             </div>
             
             <div class="form-row">
                 <label>検索終了日</label>
-                <input type="date" min="2012-05-01" max={{ date_now }} value="">
+                <input type="date" name="end_period" min="2012-05-01" max="{{ date_now }}" value="">
             </div>
 
             <div class="form-row">
