@@ -72,3 +72,14 @@ async def custom_404_handler(request: Request, exc: HTTPException):
         {"request": request, "logged_in": logged_in},
         status_code=HTTP_404_NOT_FOUND,
     )
+    
+@app.exception_handler(401)
+async def custom_401_handler(request: Request, exc: HTTPException):
+    token = request.cookies.get(auth.COOKIE_NAME)
+    logged_in = bool(token)
+    
+    return templates.TemplateResponse(
+        "404.html",
+        {"request": request, "logged_in": logged_in},
+        status_code=HTTP_404_NOT_FOUND,
+    )
