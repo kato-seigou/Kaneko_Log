@@ -16,7 +16,7 @@ def timeline_page(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user_from_cookie_optional),
     skip: int = 0,
-    limit: int = 20
+    limit: int = 10
 ):
     if current_user is None:
         resp = RedirectResponse(url="/ui/login", status_code=303)
