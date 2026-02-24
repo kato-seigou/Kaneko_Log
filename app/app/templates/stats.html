@@ -99,8 +99,7 @@
             <h2>Monthly Log</h2>
 
             <div class="monthly-controls">
-                <input id="yearInput" type="number" value="{{ year }}" min="2012" max="2100">年
-                <input id="monthInput" type="number" value="{{ month }}" min="1" max="12">月
+                <input id="monthPicker" type="month" value="{{ year }}-{{ '%02d'|format(month) }}">
                 <button id="monthlyUpdateBtn" type="button">更新</button>
             </div>
 
@@ -115,11 +114,15 @@
 
         <script>
             const btn = document.getElementById("monthlyUpdateBtn")
-            btn.addEventListener("click", async () => {
-                const y = document.getElementById("yearInput").value;
-                const m = document.getElementById("monthInput").value;
 
-                const res = await fetch(`/ui/stats/monthly?year=${encodeURIComponent(y)}&month=${encodeURIComponent(m)}`);
+            btn.addEventListener("click", async () => {
+                const value = document.getElementById("monthPicker").value;
+
+                if (!value) return;
+
+                const [year, month] = value.split("-");
+
+                const res = await fetch(`/ui/stats/monthly?year=${year}&month=${month}`);
                 if (res.status === 401) {
                     location.href = "/ui/login";
                     return;
