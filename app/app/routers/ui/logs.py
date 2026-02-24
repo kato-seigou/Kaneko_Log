@@ -64,7 +64,7 @@ def search_logs_page(
     
     # datetime型に変換する
     start_period = date.fromisoformat(start_period) if start_period else None
-    end_period = date.fromisocalendar(end_period) if end_period else None
+    end_period = date.fromisoformat(end_period) if end_period else None
     
     log_plus = crud.search_logs(
         db=db,
