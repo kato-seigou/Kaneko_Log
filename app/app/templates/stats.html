@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Log Stats{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/stats.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1 class="page-title">Your Log</h1>
+    <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
+</header>
+
+<p>ログイン中: {{ user.display_name }} @{{ user.login_id }}</p>
+
+<section class="stats-section">
+    <h2 class="section-title">Overview</h2>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">総ログ数</div>
+            <div class="kpi-value">{{ total_counts }}</div>
+        </div>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">初回ログ投稿日</div>
+            <div class="kpi-value">{{ first_log_date }}</div>
+        </div>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">経過日数</div>
+            <div class="kpi-value">{{ elapsed_days }}</div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section">
+    <h2 class="section-title">Discography Plays</h2>
+
+    {% if play_counts %}
+        <!--棒グラフ全体を囲むwrap-->
+        <div class="bar-wrap">
+            {# 上位５件 #}
+            <!--各要素を作成する-->
+            {% for disco_id, title, type, count, rate in play_counts[:5] %}
+                <div class="bar">
+                    <div class="bar-label">{{ title }}</div>
+                    <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
+                </div>
+            {% endfor%}
+            
+            {# ６件目以降もある場合 #}
+            {% if play_counts | length > 5%}
+                <details class="more-wrap">
+                    <summary class="more-btn">
+                        <span class="label-open">もっと見る</span>
+                        <span class="label-close">閉じる</span>
+                    </summary>
+
+                    <div class="more-content">
+                        {% for disco_id, title, type, count, rate in play_counts[5:] %}
+                            <div class="bar">
+                                <div class="bar-label">{{ title }}</div>
+                                <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </details>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <p class="empty">まだログがありません。</p>
+    {% endif %}
+</section>
+
+<section>
+    {% if play_counts %}
+        <div class="stats-section">
+            <h2>Monthly Log</h2>
+
+            <div class="monthly-controls">
+                <input id="yearInput" type="number" value="{{ year }}" min="2012" max="2100">年
+                <input id="monthInput" type="number" value="{{ month }}" min="1" max="12">月
+                <button id="monthlyUpdateBtn" type="button">更新</button>
+            </div>
+
+            <div id="monthlyArea">
+                {% include "partials/_monthly_stats.html" %}
+            </div>
+        </div>
+
+        <script>
+            const btn = document.getElementById("monthlyUpdateBtn")
+            btn.addEventListener("click", async () => {
+                const y = document.getElementById("yearInput").value;
+                const m = document.getElementById("monthInput").value;
+
+                const res = await fetch(`/ui/stats/monthly?year=${encodeURIComponent(y)}&month=${encodeURIComponent(m)}`);
+                if (res.status === 401) {
+                    location.href = "/ui/login";
+                    return;
+                }
+                document.getElementById("monthlyArea").innerHTML = await res.text();
+            });
+        </script>
+    {% endif %}
+
+
+{% endblock %}

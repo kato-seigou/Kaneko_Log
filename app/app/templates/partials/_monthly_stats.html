@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="{{ url_for('static', path='css/stats.css') }}">
+
+{% if monthly_counts %}
+    <div class="bar-wrap">
+        {% for disco_id, title, dtype, count, rate in monthly_counts[:5] %}
+            <div class="bar">
+                    <div class="bar-label">{{ title }}</div>
+                    <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
+                </div>
+        {% endfor %}
+
+        {% if play_counts | length > 5%}
+            <details class="more-wrap">
+                <summary class="more-btn">
+                    <span class="label-open">もっと見る</span>
+                    <span class="label-close">閉じる</span>
+                </summary>
+
+                <div class="more-content">
+                    {% for disco_id, title, type, count, rate in monthly_counts[5:] %}
+                        <div class="bar">
+                            <div class="bar-label">{{ title }}</div>
+                            <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </details>
+        {% endif %}
+        
+    </div>
+
+{% else %}
+    <p class="empty">この月のログはありません。</p>
+{% endif %}

@@ -190,8 +190,18 @@ def get_monthly_discography_counts(db: Session, year: int, month: int, user_id: 
         next_month_start = datetime(year + 1, 1, 1)
     else:
         next_month_start = datetime(year, month + 1, 1)
+    
+    total_count = (
+        db.query(func.count(models.ListenLog.log_id))
+        .join(models.Discography, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .filter(models.ListenLog.listened_at >= month_start)
+        .filter(models.ListenLog.listened_at < next_month_start)
+        .scalar()
+    )
         
-    results = (
+    rows = (
         db.query(
             models.Discography.discography_id,
             models.Discography.discography_title,
@@ -211,6 +221,12 @@ def get_monthly_discography_counts(db: Session, year: int, month: int, user_id: 
         .order_by(func.count(models.ListenLog.log_id).desc())
         .all()
     )
+    
+    results = []
+    for discography_id, discography_title, discography_type, play_count in rows:
+        rate = play_count / total_count if total_count else 0
+        results.append((discography_id, discography_title, discography_type, play_count, rate))
+        
     return results
 
 # POST系

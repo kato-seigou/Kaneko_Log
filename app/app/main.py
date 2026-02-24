@@ -17,6 +17,7 @@ from .routers.ui import logs as ui_logs
 from .routers.ui import discographies as ui_disco
 from .routers.ui import timeline as ui_timeline
 from .routers.ui import account as ui_account
+from .routers.ui import stats as ui_stats
 
 # DBテーブル作成
 # Base.metadata.create_all(bind=engine)
@@ -43,6 +44,7 @@ app.include_router(ui_logs.router)
 app.include_router(ui_disco.router)
 app.include_router(ui_timeline.router)
 app.include_router(ui_account.router)
+app.include_router(ui_stats.router)
 
 # @app.get("/")
 # def root():

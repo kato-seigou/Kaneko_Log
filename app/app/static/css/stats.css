@@ -1,0 +1,78 @@
+.stats-section {
+    margin: 20px auto;
+    padding: 32px;
+    background: #EFECE9;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* -- OverView --*/
+
+
+/* -------- Discography Plays --------- */
+/* --https://luv-pottsu.com/blog/archives/1427--*/
+.bar-wrap {
+    width: 100%;
+}
+
+.bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.bar-label {
+    width: 220px;
+    font-weight: bold;
+}
+
+
+.bar-fill {
+    background-color: #111;
+    color: #bbb;
+    text-align: right;
+    padding-right: 10px;
+    height: 50px;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* --要素の展開-- */
+.more-wrap {
+    margin-top: 14px;
+}
+
+.more-btn {
+    cursor: pointer;
+    user-select: none;
+    color: #666;
+    font-weight: 600;
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.more-btn::-webkit-details-marker{
+    display:none;
+}
+.more-btn::marker{
+    display:none;
+}
+.more-btn{
+    cursor:pointer;
+}
+
+.label-close{
+    display: none;
+}
+
+.more-wrap[open] .label-open{
+    display: none;
+}
+
+.more-wrap[open] .label-close{
+    display: inline;
+}
+

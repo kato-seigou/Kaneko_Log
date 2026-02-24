@@ -56,9 +56,6 @@ def search_logs_page(
     skip: int = Query(0),
     limit: int = Query(2),
 ):
-
-    print("DEBUG", start_period, end_period, search_title, search_type, skip, limit)
-
     if current_user is None:
         resp = RedirectResponse(url="/ui/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
