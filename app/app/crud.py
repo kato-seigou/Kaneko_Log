@@ -1,5 +1,6 @@
 from typing import Optional, List
 from datetime import datetime, timezone
+from sqlalchemy import func
 from sqlalchemy.orm import Session , joinedload
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
@@ -80,6 +81,138 @@ def get_timeline_logs(db: Session, skip: int = 0, limit: int = 20):
     )
     return q.all()
 
+### 統計用
+# 初回ログからの経過日数
+def get_first_log_date(db: Session, user_id: int):
+    """ 
+    - first_days: ログ初回投稿日
+    - days: 経過日数
+    """
+    first_day = (
+        db.query(func.min(models.ListenLog.listened_at))
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .scalar())
+    
+    today = datetime.now()
+    
+    if first_day is not None:
+        days = (today - first_day).days
+    else:
+        days = 0
+        
+    return first_day, days
+
+# ディスコグラフィごとの再生回数（全期間）
+def get_discography_play_counts(db: Session, user_id: int):
+    """
+    [(disco_id, disco_title, disco_type, play_count, rate), (disco_id, disco_title, disco_type, play_count, rate)...]
+    """
+    total_count = (
+        db.query(func.count(models.ListenLog.log_id))
+        .join(models.Discography, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .filter(models.Discography.discography_type.in_(["EP", "Album"]))
+        .scalar()
+    )
+    
+    rows = (
+        db.query(
+            models.Discography.discography_id,
+            models.Discography.discography_title,
+            models.Discography.discography_type,
+            func.count(models.ListenLog.log_id).label("play_count"),
+            )
+        .join(models.ListenLog, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .group_by(
+            models.Discography.discography_id,
+            models.Discography.discography_title,
+            models.Discography.discography_type,
+            )
+        .order_by(func.count(models.ListenLog.log_id).desc())
+        .all()
+    )
+    
+    results = []
+    for discography_id, discography_title, discography_type, play_count in rows:
+        rate = play_count / total_count if total_count else 0
+        results.append((discography_id, discography_title, discography_type, play_count, rate))
+    
+    return results
+
+def get_discography_share(db: Session, user_id: int):
+    """ 
+    ((discography_id, discography_title, discography_type, play_count, rate))
+    """
+    total_count = (
+        db.query(func.count(models.ListenLog.log_id))
+        .join(models.Discography, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .filter(models.Discography.discography_type.in_(["EP", "Album"]))
+        .scalar()
+    )
+    
+    rows = (
+        db.query(
+            models.Discography.discography_id,
+            models.Discography.discography_title,
+            models.Discography.discography_type,
+            func.count(models.ListenLog.log_id).label("play_count"),
+        )
+        .join(models.ListenLog, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .filter(models.Discography.discography_type.in_(["EP", "Album"]))
+        .group_by(
+            models.Discography.discography_id,
+            models.Discography.discography_title,
+            models.Discography.discography_type,
+        )
+        .order_by(func.count(models.ListenLog.log_id).desc())
+        .all()
+    )
+    
+    results = []
+    for discography_id, discography_title, discography_type, play_count in rows:
+        rate = play_count / total_count if total_count else 0
+        results.append((discography_id, discography_title, discography_type, play_count, rate))
+        
+    return results
+
+# 月ごとのディスコグラフィの集計
+def get_monthly_discography_counts(db: Session, year: int, month: int, user_id: int):
+    month_start = datetime(year, month, 1)
+    if month == 12:
+        next_month_start = datetime(year + 1, 1, 1)
+    else:
+        next_month_start = datetime(year, month + 1, 1)
+        
+    results = (
+        db.query(
+            models.Discography.discography_id,
+            models.Discography.discography_title,
+            models.Discography.discography_type,
+            func.count(models.ListenLog.log_id).label("play_count"),
+            )
+        .join(models.ListenLog, models.ListenLog.discography_id == models.Discography.discography_id)
+        .filter(models.ListenLog.user_id == user_id)
+        .filter(models.ListenLog.deleted_at.is_(None))
+        .filter(models.ListenLog.listened_at >= month_start)
+        .filter(models.ListenLog.listened_at < next_month_start)
+        .group_by(
+            models.ListenLog.discography_id,
+            models.Discography.discography_title,
+            models.Discography.discography_type,
+            )
+        .order_by(func.count(models.ListenLog.log_id).desc())
+        .all()
+    )
+    return results
+
 # POST系
 def create_user(db: Session, user: schemas.UserCreate):
     hashed = security.hash_password(user.password)
@@ -110,7 +243,7 @@ def create_discography(db: Session, discography: schemas.DiscographyCreate):
             discography_type = discography.discography_type,
             released_date = discography.released_date,
             playtime_seconds = discography.playtime_seconds,
-            discography_id = discography.discography_link
+            discography_link = discography.discography_link
         )
         db.add(db_discography)
         db.commit()
