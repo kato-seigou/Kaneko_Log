@@ -2,9 +2,17 @@
 
 {% if monthly_counts %}
     <div class="bar-wrap">
-        {% for disco_id, title, dtype, count, rate in monthly_counts[:5] %}
+        {% for disco_id, title, dtype, count, rate, link in monthly_counts[:5] %}
             <div class="bar">
-                    <div class="bar-label">{{ title }}</div>
+                            <div class="bar-label">
+                                {% if link is none %}
+                                {{ title }}
+                                {% else %}
+                                <a href="{{ link }}" target="_blank" rel="noopener noreferrer">
+                                {{ title }}
+                                </a>
+                                {% endif %}
+                            </div>
                     <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
                 </div>
         {% endfor %}
@@ -17,9 +25,17 @@
                 </summary>
 
                 <div class="more-content">
-                    {% for disco_id, title, type, count, rate in monthly_counts[5:] %}
+                    {% for disco_id, title, type, count, rate, link in monthly_counts[5:] %}
                         <div class="bar">
-                            <div class="bar-label">{{ title }}</div>
+                            <div class="bar-label">
+                                {% if link is none %}
+                                {{ title }}
+                                {% else %}
+                                <a href="{{ link }}" target="_blank" rel="noopener noreferrer">
+                                {{ title }}
+                                </a>
+                                {% endif %}
+                            </div>
                             <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
                         </div>
                     {% endfor %}

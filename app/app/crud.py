@@ -122,6 +122,7 @@ def get_discography_play_counts(db: Session, user_id: int):
             models.Discography.discography_id,
             models.Discography.discography_title,
             models.Discography.discography_type,
+            models.Discography.discography_link,
             func.count(models.ListenLog.log_id).label("play_count"),
             )
         .join(models.ListenLog, models.ListenLog.discography_id == models.Discography.discography_id)
@@ -131,15 +132,16 @@ def get_discography_play_counts(db: Session, user_id: int):
             models.Discography.discography_id,
             models.Discography.discography_title,
             models.Discography.discography_type,
+            models.Discography.discography_link,
             )
         .order_by(func.count(models.ListenLog.log_id).desc())
         .all()
     )
     
     results = []
-    for discography_id, discography_title, discography_type, play_count in rows:
+    for discography_id, discography_title, discography_type, discography_link, play_count in rows:
         rate = play_count / total_count if total_count else 0
-        results.append((discography_id, discography_title, discography_type, play_count, rate))
+        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link))
     
     return results
 
@@ -161,6 +163,7 @@ def get_discography_share(db: Session, user_id: int):
             models.Discography.discography_id,
             models.Discography.discography_title,
             models.Discography.discography_type,
+            models.Discography.discography_link,
             func.count(models.ListenLog.log_id).label("play_count"),
         )
         .join(models.ListenLog, models.ListenLog.discography_id == models.Discography.discography_id)
@@ -171,16 +174,17 @@ def get_discography_share(db: Session, user_id: int):
             models.Discography.discography_id,
             models.Discography.discography_title,
             models.Discography.discography_type,
+            models.Discography.discography_link,
         )
         .order_by(func.count(models.ListenLog.log_id).desc())
         .all()
     )
     
     results = []
-    for discography_id, discography_title, discography_type, play_count in rows:
+    for discography_id, discography_title, discography_type, discography_link, play_count in rows:
         rate = play_count / total_count if total_count else 0
-        results.append((discography_id, discography_title, discography_type, play_count, rate))
-        
+        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link))
+    
     return results
 
 # 月ごとのディスコグラフィの集計
@@ -206,6 +210,7 @@ def get_monthly_discography_counts(db: Session, year: int, month: int, user_id: 
             models.Discography.discography_id,
             models.Discography.discography_title,
             models.Discography.discography_type,
+            models.Discography.discography_link,
             func.count(models.ListenLog.log_id).label("play_count"),
             )
         .join(models.ListenLog, models.ListenLog.discography_id == models.Discography.discography_id)
@@ -217,18 +222,18 @@ def get_monthly_discography_counts(db: Session, year: int, month: int, user_id: 
             models.ListenLog.discography_id,
             models.Discography.discography_title,
             models.Discography.discography_type,
+            models.Discography.discography_link,
             )
         .order_by(func.count(models.ListenLog.log_id).desc())
         .all()
     )
     
     results = []
-    for discography_id, discography_title, discography_type, play_count in rows:
+    for discography_id, discography_title, discography_type, discography_link, play_count in rows:
         rate = play_count / total_count if total_count else 0
-        results.append((discography_id, discography_title, discography_type, play_count, rate))
-        
+        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link))
+    
     return results
-
 # POST系
 def create_user(db: Session, user: schemas.UserCreate):
     hashed = security.hash_password(user.password)

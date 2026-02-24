@@ -1,9 +1,14 @@
 .stats-section {
-    margin: 20px auto;
-    padding: 32px;
+    max-width: 880px;
+    margin: 40px auto;
+    padding: 24px 32px;
     background: #EFECE9;
     border-radius: 14px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.stats-section h2 {
+    margin: 0 0 20px 0;
 }
 
 /* -- OverView --*/
@@ -39,6 +44,33 @@
     align-items: center;
     justify-content: flex-end;
 }
+
+/* ------- 月別統計の画面 --------- */
+.monthly-controls input {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 70px;
+    font-family: inherit;
+}
+
+.monthly-controls button {
+    padding: 6px 8px;
+    border: none;
+    background:#fff;
+    border-radius:6px;
+    cursor:pointer;
+    font-family: inherit;
+    background: #111;
+    color: #fff;
+    transition: background 0.2s ease;
+}
+.monthly-controls button:hover{
+    background: #333;
+}
+
+
 
 /* --要素の展開-- */
 .more-wrap {
