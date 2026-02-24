@@ -20,18 +20,18 @@
             <div class="kpi-label">総ログ数</div>
             <div class="kpi-value">{{ total_counts }}</div>
         </div>
-    </div>
-
-    <div class="kpi-grid">
+    
         <div class="kpi-card">
-            <div class="kpi-label">初回ログ投稿日</div>
-            <div class="kpi-value">{{ first_log_date }}</div>
+            <div class="kpi-label">最初のログ投稿日</div>
+            {% if first_log_date is none %}
+                <div class="kpi-value">まだログがありません。</div>
+            {% else %}
+                <div class="kpi-value">{{ first_log_date.strftime("%Y-%m-%d") }}</div>
+            {% endif %}
         </div>
-    </div>
-
-    <div class="kpi-grid">
+    
         <div class="kpi-card">
-            <div class="kpi-label">経過日数</div>
+            <div class="kpi-label">最初のログ投稿日からの経過日数</div>
             <div class="kpi-value">{{ elapsed_days }}</div>
         </div>
     </div>
@@ -99,7 +99,7 @@
             <h2>Monthly Log</h2>
 
             <div class="monthly-controls">
-                <input id="monthPicker" type="month" value="{{ year }}-{{ '%02d'|format(month) }}">
+                <input id="monthPicker" type="month" min="2012-05" value="{{ year }}-{{ '%02d'|format(month) }}">
                 <button id="monthlyUpdateBtn" type="button">更新</button>
             </div>
 

@@ -12,6 +12,37 @@
 }
 
 /* -- OverView --*/
+.kpi-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.kpi-card{
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+.kpi-label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.kpi-value{
+    font-size: 20px;
+    /* font-weight: 700; */
+    line-height: 1.1;
+    color: #111;
+    word-break: break-word;
+    text-align: center;
+}
 
 
 /* -------- Discography Plays --------- */
