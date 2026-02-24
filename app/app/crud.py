@@ -113,7 +113,6 @@ def get_discography_play_counts(db: Session, user_id: int):
         .join(models.Discography, models.ListenLog.discography_id == models.Discography.discography_id)
         .filter(models.ListenLog.user_id == user_id)
         .filter(models.ListenLog.deleted_at.is_(None))
-        .filter(models.Discography.discography_type.in_(["EP", "Album"]))
         .scalar()
     )
     
