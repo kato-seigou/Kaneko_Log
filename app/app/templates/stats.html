@@ -47,18 +47,20 @@
         <div class="bar-wrap">
             {# 上位５件 #}
             <!--各要素を作成する-->
-            {% for disco_id, title, type, count, rate, link in play_counts[:5] %}
+            {% for disco_id, title, type, count, rate, link, rate_bar in play_counts[:5] %}
                 <div class="bar">
-                    <div class="bar-label">
-                        {% if link is none %}
-                        {{ title }}
-                        {% else %}
-                        <a href="{{ link }}" target="_blank" rel="noopener noreferrer">
-                        {{ title }}
-                        </a>
-                        {% endif %}
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: {{ rate_bar * 100 }}%;"></div>
+
+                        <div class="bar-title">
+                            {% if link is none %}
+                                {{ title }}
+                            {% else %}
+                                <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+                            {% endif %}
+                        </div>
+                        <div class="bar-count">{{ count }}</div>
                     </div>
-                    <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
                 </div>
             {% endfor%}
             
@@ -71,18 +73,19 @@
                     </summary>
 
                     <div class="more-content">
-                        {% for disco_id, title, type, count, rate, link in play_counts[5:] %}
+                        {% for disco_id, title, type, count, rate, link, rate_bar in play_counts[5:] %}
                             <div class="bar">
-                                <div class="bar-label">
-                                    {% if link is none %}
-                                    {{ title }}
-                                    {% else %}
-                                    <a href="{{ link }}" target="_blank" rel="noopener noreferrer">
-                                    {{ title }}
-                                    </a>
-                                    {% endif %}
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: {{ rate_bar * 100 }}%;"></div>
+                                    <div class="bar-title">
+                                        {% if link is none %}
+                                            {{ title }}
+                                        {% else %}
+                                            <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="bar-count">{{ count }}</div>
                                 </div>
-                                <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
                             </div>
                         {% endfor %}
                     </div>
@@ -185,6 +188,18 @@
 
         // -----------％計算（外側用）----------
         const outerTotal = outerData.reduce((a, b) => a + b, 0);
+
+        // ページ側のfont-familyを取得（body / html から拾う）
+        const pageFont = getComputedStyle(document.body).fontFamily
+        || getComputedStyle(document.documentElement).fontFamily
+        || "sans-serif";
+
+        // ついでに文字色も揃えたければ（任意）
+        const pageColor = getComputedStyle(document.body).color || "#111";
+
+        // Chart.js 全体のデフォルトに反映（このページ内の他チャートも統一される）
+        Chart.defaults.font.family = pageFont;
+        Chart.defaults.color = pageColor;
 
         const chart = new Chart(canvas.getContext("2d"), {
             type: "doughnut",

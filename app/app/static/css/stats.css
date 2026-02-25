@@ -52,28 +52,62 @@
 }
 
 .bar {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
-.bar-label {
-    width: 220px;
-    font-weight: bold;
+.bar-track{
+    position: relative;
+    width: 100%;
+    height: 32px; /* 幅(52) */
+    border-radius: 8px;
+    background: rgba(0,0,0,0.12);
+    overflow: hidden;
+    z-index: 0;
 }
-
 
 .bar-fill {
-    background-color: #111;
-    color: #bbb;
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: #9E9E9E;
+    z-index: 1;
+}
+
+.bar-title{
+    position: absolute;
+    left: 14px;
+    right: 68px;          /* 右の数字チップ分を確保 */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    
+    font-size: 12px; 
+    color: #111;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bar-title a{
+    color: #111;
+    text-decoration: none;
+}
+
+.bar-count{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+
+    font-size: 12px; 
+    min-width: 40px;
     text-align: right;
-    padding-right: 10px;
-    height: 50px;
-    border-radius: 5px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    color: #111;
+    /* background: rgba(0,0,0,0.55); */
+    padding: 6px 10px;
+    border-radius: 8px;
 }
 
 /* ------- 月別統計の画面 --------- */

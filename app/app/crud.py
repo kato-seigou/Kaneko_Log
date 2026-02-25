@@ -106,7 +106,9 @@ def get_first_log_date(db: Session, user_id: int):
 # ディスコグラフィごとの再生回数（全期間）
 def get_discography_play_counts(db: Session, user_id: int):
     """
-    [(disco_id, disco_title, disco_type, play_count, rate, link), ...]
+    [(disco_id, disco_title, disco_type, play_count, rate, link, rate_bar), ...]
+    - rate: 合計値に対する比率
+    - rate_bar: 最大値を1.0とした比率
     """
     total_count = (
         db.query(func.count(models.ListenLog.log_id))
@@ -137,10 +139,13 @@ def get_discography_play_counts(db: Session, user_id: int):
         .all()
     )
     
+    max_count = rows[0][4] if rows else 0
+    
     results = []
     for discography_id, discography_title, discography_type, discography_link, play_count in rows:
         rate = play_count / total_count if total_count else 0
-        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link))
+        rate_bar = play_count / max_count if max_count else 0
+        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link, rate_bar))
     
     return results
 
@@ -227,10 +232,13 @@ def get_monthly_discography_counts(db: Session, year: int, month: int, user_id: 
         .all()
     )
     
+    max_count = rows[0][4] if rows else 0
+    
     results = []
     for discography_id, discography_title, discography_type, discography_link, play_count in rows:
         rate = play_count / total_count if total_count else 0
-        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link))
+        rate_bar = play_count / max_count if max_count else 0
+        results.append((discography_id, discography_title, discography_type, play_count, rate, discography_link, rate_bar))
     
     return results
 # POST系

@@ -2,19 +2,21 @@
 
 {% if monthly_counts %}
     <div class="bar-wrap">
-        {% for disco_id, title, dtype, count, rate, link in monthly_counts[:5] %}
+        {% for disco_id, title, dtype, count, rate, link, rate_bar in monthly_counts[:5] %}
             <div class="bar">
-                            <div class="bar-label">
-                                {% if link is none %}
-                                {{ title }}
-                                {% else %}
-                                <a href="{{ link }}" target="_blank" rel="noopener noreferrer">
-                                {{ title }}
-                                </a>
-                                {% endif %}
-                            </div>
-                    <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: {{ rate_bar * 100 }}%;"></div>
+                    
+                    <div class="bar-title">
+                        {% if link is none %}
+                            {{ title }}
+                        {% else %}
+                            <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+                        {% endif %}
+                    </div>
+                    <div class="bar-count">{{ count }}</div>
                 </div>
+            </div>
         {% endfor %}
 
         {% if play_counts | length > 5%}
@@ -25,18 +27,20 @@
                 </summary>
 
                 <div class="more-content">
-                    {% for disco_id, title, type, count, rate, link in monthly_counts[5:] %}
+                    {% for disco_id, title, type, count, rate, link, rate_bar in monthly_counts[5:] %}
                         <div class="bar">
-                            <div class="bar-label">
-                                {% if link is none %}
-                                {{ title }}
-                                {% else %}
-                                <a href="{{ link }}" target="_blank" rel="noopener noreferrer">
-                                {{ title }}
-                                </a>
-                                {% endif %}
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: {{ rate_bar * 100 }}%;"></div>
+                                
+                                <div class="bar-title">
+                                    {% if link is none %}
+                                        {{ title }}
+                                    {% else %}
+                                        <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+                                    {% endif %}
+                                </div>
+                                <div class="bar-count">{{ count }}</div>
                             </div>
-                            <div class="bar-fill" style="width: {{ rate * 100 }}%; ">{{ count }}</div>
                         </div>
                     {% endfor %}
                 </div>
