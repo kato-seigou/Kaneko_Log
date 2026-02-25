@@ -90,7 +90,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
         )
     
     return templates.TemplateResponse(
-        "errors/error.html",
+        "errors/errors.html",
         {"request": request, "logged_in": logged_in, "status_code": exc.status_code},
         status_code=exc.status_code
     )
@@ -101,7 +101,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     logged_in = bool(token)
     
     return templates.TemplateResponse(
-        "errors/error.html",
+        "errors/errors.html",
         {"request": request, "logged_in": logged_in, "status_code": 500},
         status_code=500,
     )
