@@ -5,6 +5,7 @@ from urllib.parse import unquote
 
 from ._flash import FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 from ._csrf import ensure_csrf_token, CSRF_COOKIE_NAME
+from ... import settings
 
 templates = Jinja2Templates(directory="app/app/templates")
 
@@ -42,7 +43,7 @@ def render(request: Request, name: str, context: dict, status_code: int = 200):
             max_age=60 * 60 * 24,
             httponly=True,
             samesite="lax",
-            secure=False,   # 本番は True（後で）
+            secure=settings.SECURE_COOKIE,  
             path="/",
         )
 

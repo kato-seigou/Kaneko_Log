@@ -65,7 +65,7 @@ def login_action(
         value=token,
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=settings.SECURE_COOKIE,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         path="/"
     )

@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 # .envを読み取る
@@ -17,3 +17,6 @@ ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 
 # ログイン状態（アクセストークン）の有効期限（分）
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
+
+ENV = os.getenv("ENV", "development")
+SECURE_COOKIE = (ENV == "production") # ENVが"production"ならTrueを返す

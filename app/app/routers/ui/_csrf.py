@@ -22,7 +22,7 @@ def ensure_csrf_token(request: Request, response: Response) -> str:
             max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
             httponly=True,
             samesite="lax",
-            secure=False,
+            secure=settings.SECURE_COOKIE,
             path="/"
         )
     return token
