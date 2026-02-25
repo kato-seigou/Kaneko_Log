@@ -42,17 +42,26 @@
 
     <div class="form-group">
         <label>現在のパスワード<span class="required">*</span></label>
-        <input type="password" name="current_password" placeholder="現在のパスワード" required/>
+        <div class="password-wrapper">
+            <input type="password" class="password__input" name="current_password" placeholder="現在のパスワード" required/>
+            <button type="button" class="password__toggle" aria-label="パスワード表示切替"></button>
+        </div>
     </div>
 
     <div class="form-group">
         <label>新しいパスワード<span class="required">*</span></label>
-        <input type="password" name="new_password" placeholder="8文字以上の半角英数字・記号（必須）" required/>
+        <div class="password-wrapper">
+            <input type="password" class="password__input" name="new_password" placeholder="8文字以上の半角英数字・記号（必須）" required/>
+            <button type="button" class="password__toggle" aria-label="パスワード表示切替"></button>
+        </div>
     </div>
 
     <div class="form-group">
         <label>新しいパスワード（確認用）<span class="required">*</span></label>
-        <input type="password" name="new_password_confirm" placeholder="上記と同じパスワードを入力">
+        <div class="password-wrapper">
+            <input type="password" class="password__input" name="new_password_confirm" placeholder="上記と同じパスワードを入力">
+            <button type="button" class="password__toggle" aria-label="パスワード表示切替"></button>
+        </div>
     </div>
 
     <div class="form-group">
@@ -60,10 +69,23 @@
     </div>
 </form>
 
-
 <p style="margin-top:12px;">
     <a href="/ui/logs">ログ一覧へ戻る</a>
 </p>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.password__toggle').forEach((btn) => {
+        btn.addEventListener('click', () => {
+        const wrapper = btn.closest('.password-wrapper');
+        const input = wrapper.querySelector('input');
+
+        input.type = (input.type === 'password') ? 'text' : 'password';
+        btn.classList.toggle('is-visible', input.type === 'text');
+        });
+    });
+    });
+</script>
 
 {% endblock %}
 

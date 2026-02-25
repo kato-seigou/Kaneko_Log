@@ -25,7 +25,10 @@
 
   <div class="form-group">
     <label>password</label>
-    <input type="password" name="password" required />
+    <div class="password-wrapper">
+      <input type="password" class="password__input" name="password" required />
+      <button type="button" class="password__toggle" aria-label="パスワード表示切替"></button>
+    </div>
   </div>
 
   <p class="text">※ ログイン有効期間は1時間です</p>
@@ -36,4 +39,19 @@
 
 </form>
 <p style="margin-top:12px;"><a href="/ui/register">新規アカウント登録</a></p>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.password__toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const wrapper = btn.closest('.password-wrapper');
+      const input = wrapper.querySelector('input');
+
+      input.type = (input.type === 'password') ? 'text' : 'password';
+      btn.classList.toggle('is-visible', input.type === 'text');
+    });
+  });
+});
+</script>
+
 {% endblock %}
