@@ -115,13 +115,14 @@ def stats_pie(
             inner_labels.append(dtype)
             inner_data.append(s)
 
-    outer_labels, outer_data = [], []
+    outer_labels, outer_data, outer_types = [], [], []
     for dtype in DTYPES:
         for title, count in grouped.get(dtype, []):
             outer_labels.append(title)
             outer_data.append(count)
+            outer_types.append(dtype)
 
     return {
         "inner": {"labels": inner_labels, "data": inner_data},
-        "outer": {"labels": outer_labels, "data": outer_data},
+        "outer": {"labels": outer_labels, "data": outer_data, "types": outer_types},
     }

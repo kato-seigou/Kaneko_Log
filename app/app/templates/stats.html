@@ -159,7 +159,31 @@
         const outerLabels = json.outer.labels;
         const outerData   = json.outer.data;
 
-        // ％計算（外側用）
+        // 内側の色
+        const TYPE_COLORS = {
+            Album: "#D8C893",
+            EP: "#E3C8C0",
+            Single: "#DEB29E",
+            Movie: "#CECECE",
+            };
+        
+        // ---------外側の色-----------
+        const outerTypes = json.outer.types;
+
+        // 色を薄くする関数（簡易）
+        function lighten(hex, amt=0.55){
+            const h = hex.replace("#","");
+            const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+            const nr = Math.round(r + (255 - r)*amt);
+            const ng = Math.round(g + (255 - g)*amt);
+            const nb = Math.round(b + (255 - b)*amt);
+            return `rgb(${nr},${ng},${nb})`;
+        }
+
+        const outerColors = outerTypes.map(t => lighten(TYPE_COLORS[t] ?? "#999", 0.65));
+
+
+        // -----------％計算（外側用）----------
         const outerTotal = outerData.reduce((a, b) => a + b, 0);
 
         const chart = new Chart(canvas.getContext("2d"), {
@@ -173,6 +197,9 @@
                 data: innerData,
                 radius: "55%",
                 cutout: "35%",
+                backgroundColor: innerLabels.map(t => TYPE_COLORS[t] ?? "#999"),
+                borderColor: "#fff",
+                borderWidth: 2,
                 },
                 {
                 // 外側リング（タイトル）
@@ -180,6 +207,9 @@
                 data: outerData,
                 radius: "90%",
                 cutout: "60%",
+                backgroundColor: outerColors,
+                borderColor: "#fff",
+                borderWidth: 2,
                 }
             ]
             },
@@ -191,29 +221,17 @@
                 // ラベル表示の制御（内側=種類名、外側=タイトル+%）
                 datalabels: {
                     formatter: (value, context) => {
-                        const dsIndex = context.datasetIndex;
-
-                        // 内側：種類名だけ
-                        if (dsIndex === 0) {
-                        const total = context.dataset.data.reduce((a,b)=>a+b,0);
-                        const pct = total ? (value / total * 100) : 0;
-                        if (pct < 5) return "";
+                        // 内側だけ種類名を出す
+                        if (context.datasetIndex === 0) {
                         return context.dataset.labels[context.dataIndex];
                         }
-
-                        // 外側：タイトルのみ（％は消す）
-                        // const pct = outerTotal ? (value / outerTotal * 100) : 0;
-                        // if (pct < 5) return "";
-                        // return context.dataset.labels[context.dataIndex];
+                        // 外側は表示しない
+                        return "";
                     },
-
-                    font: (context) => {
-                        // 内側は大きめ、外側は小さめ
-                        return {
+                    font: (context) => ({
                         size: context.datasetIndex === 0 ? 14 : 10,
-                        weight: context.datasetIndex === 0 ? "bold" : "normal"
-                        };
-                    }
+                        weight: context.datasetIndex === 0 ? "bold" : "normal",
+                    }),
                 },
                 tooltip: {
                 callbacks: {
@@ -236,7 +254,33 @@
                     }
                 }
                 },
-                legend: { display: true }
+                legend: {
+                    display: true,
+                    labels: {
+                        generateLabels: (chart) => {
+                        const dsIndex = 1; // 外側
+                        const ds = chart.data.datasets[dsIndex];
+                        const labels = ds.labels || [];
+                        return labels.map((text, i) => ({
+                            text,
+                            fillStyle: Array.isArray(ds.backgroundColor) ? ds.backgroundColor[i] : ds.backgroundColor,
+                            strokeStyle: Array.isArray(ds.borderColor) ? ds.borderColor[i] : ds.borderColor,
+                            lineWidth: ds.borderWidth || 1,
+                            hidden: chart.getDatasetMeta(dsIndex).data[i].hidden,
+                            index: i,
+                            datasetIndex: dsIndex,
+                        }));
+                        }
+                    },
+                    // クリックでその扇形をON/OFFできるようにする（便利）
+                    onClick: (e, legendItem, legend) => {
+                        const chart = legend.chart;
+                        const dsIndex = legendItem.datasetIndex;
+                        const i = legendItem.index;
+                        chart.toggleDataVisibility(i);
+                        chart.update();
+                    }
+                    }
             }
             }
         });
