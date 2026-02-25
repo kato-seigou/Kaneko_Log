@@ -106,7 +106,7 @@ def get_first_log_date(db: Session, user_id: int):
 # ディスコグラフィごとの再生回数（全期間）
 def get_discography_play_counts(db: Session, user_id: int):
     """
-    [(disco_id, disco_title, disco_type, play_count, rate), (disco_id, disco_title, disco_type, play_count, rate)...]
+    [(disco_id, disco_title, disco_type, play_count, rate, link), ...]
     """
     total_count = (
         db.query(func.count(models.ListenLog.log_id))

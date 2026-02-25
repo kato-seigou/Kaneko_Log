@@ -6,6 +6,7 @@ from fastapi import APIRouter, Request, Depends, Form, HTTPException, Query
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from urllib.parse import unquote
+from fastapi.responses import JSONResponse
 
 from ... import models, crud, schemas
 from ...database import get_db
@@ -86,3 +87,41 @@ def stats_monthly_partial(
             "monthly_counts": monthly_counts
         }
     )
+
+@router.get("/stats/pie")
+def stats_pie(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user_from_cookie_optional),
+):
+    if current_user is None:
+        return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+
+    rows = crud.get_discography_play_counts(db=db, user_id=current_user.user_id)
+
+    DTYPES = ["Album", "EP", "Single", "Movie"]
+
+    grouped: dict[str, list[tuple[str, int]]] = {}
+    for row in rows:
+        dtype = row[2]
+        dtype = dtype.value if hasattr(dtype, "value") else dtype  # Enum対策
+        title = row[1]
+        count = row[3]
+        grouped.setdefault(dtype, []).append((title, count))
+
+    inner_labels, inner_data = [], []
+    for dtype in DTYPES:
+        s = sum(count for _, count in grouped.get(dtype, []))
+        if s > 0:
+            inner_labels.append(dtype)
+            inner_data.append(s)
+
+    outer_labels, outer_data = [], []
+    for dtype in DTYPES:
+        for title, count in grouped.get(dtype, []):
+            outer_labels.append(title)
+            outer_data.append(count)
+
+    return {
+        "inner": {"labels": inner_labels, "data": inner_data},
+        "outer": {"labels": outer_labels, "data": outer_data},
+    }

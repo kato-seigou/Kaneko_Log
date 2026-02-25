@@ -2,6 +2,8 @@
 {% block title %}Log Stats{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', path='css/stats.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -93,9 +95,9 @@
     {% endif %}
 </section>
 
-<section>
+<section class="stats-section">
     {% if play_counts %}
-        <div class="stats-section">
+        <div>
             <h2>Monthly Log</h2>
 
             <div class="monthly-controls">
@@ -131,6 +133,118 @@
             });
         </script>
     {% endif %}
+</section>
 
+<section class="stats-section">
+    <h2 class="section-title">Plays Share</h2>
+
+    <div class="chart-wrap">
+        <canvas id="playsPie"></canvas>
+    </div>
+
+    <script>
+        (async () => {
+        const canvas = document.getElementById("playsPie");
+        if (!canvas) return;
+
+        const res = await fetch("/ui/stats/pie");
+        if (res.status === 401) {
+            location.href = "/ui/login";
+            return;
+        }
+        const json = await res.json();
+
+        const innerLabels = json.inner.labels;
+        const innerData   = json.inner.data;
+        const outerLabels = json.outer.labels;
+        const outerData   = json.outer.data;
+
+        // ％計算（外側用）
+        const outerTotal = outerData.reduce((a, b) => a + b, 0);
+
+        const chart = new Chart(canvas.getContext("2d"), {
+            type: "doughnut",
+            data: {
+            labels: outerLabels, // tooltip用に外側labelsを入れておく
+            datasets: [
+                {
+                // 内側リング（種類）
+                labels: innerLabels,
+                data: innerData,
+                radius: "55%",
+                cutout: "35%",
+                },
+                {
+                // 外側リング（タイトル）
+                labels: outerLabels,
+                data: outerData,
+                radius: "90%",
+                cutout: "60%",
+                }
+            ]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                // ラベル表示の制御（内側=種類名、外側=タイトル+%）
+                datalabels: {
+                    formatter: (value, context) => {
+                        const dsIndex = context.datasetIndex;
+
+                        // 内側：種類名だけ
+                        if (dsIndex === 0) {
+                        const total = context.dataset.data.reduce((a,b)=>a+b,0);
+                        const pct = total ? (value / total * 100) : 0;
+                        if (pct < 5) return "";
+                        return context.dataset.labels[context.dataIndex];
+                        }
+
+                        // 外側：タイトルのみ（％は消す）
+                        // const pct = outerTotal ? (value / outerTotal * 100) : 0;
+                        // if (pct < 5) return "";
+                        // return context.dataset.labels[context.dataIndex];
+                    },
+
+                    font: (context) => {
+                        // 内側は大きめ、外側は小さめ
+                        return {
+                        size: context.datasetIndex === 0 ? 14 : 10,
+                        weight: context.datasetIndex === 0 ? "bold" : "normal"
+                        };
+                    }
+                },
+                tooltip: {
+                callbacks: {
+                    label: (context) => {
+                    // datasetIndexで内外判定
+                    const ds = context.dataset;
+                    const label = ds.labels?.[context.dataIndex] ?? context.label;
+                    const val = context.raw;
+
+                    
+                    if (context.datasetIndex === 1) {
+                        const pct = outerTotal ? (val / outerTotal * 100) : 0;
+                        return `${label}: ${val}回 (${pct.toFixed(1)}%)`;
+                    }
+                    if (context.datasetIndex === 0) {
+                        const pct = outerTotal ? (val / outerTotal * 100) : 0;
+                        return `${label}: ${val}回（${pct.toFixed(1)}%）`;
+                    }
+                    return `${label}: ${val}回`;
+                    }
+                }
+                },
+                legend: { display: true }
+            }
+            }
+        });
+
+        // もし後で更新したくなったら window に置くと便利
+        window.playsPieChart = chart;
+        })();
+    </script>
+</section>
 
 {% endblock %}
