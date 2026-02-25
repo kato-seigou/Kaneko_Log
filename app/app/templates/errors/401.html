@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Unauthorized{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <h1>401 Unauthorized</h1>
+
+    {% if logged_in %}
+        <p>このページにアクセスする権限がありません</p>
+        <a href="/ui/logs" class="btn">My Logsへ戻る</a>
+    {% else %}
+        <p>ログインが必要です。セッションが切れている可能性があります。</p>
+        <a href="/ui/login" class="btn">ログインページへ</a>
+    {% endif %}
+</div>
+{% endblock %}

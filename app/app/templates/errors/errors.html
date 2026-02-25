@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div class="error-container">
+
+    <h1>{{ status_code }} Error</h1>
+
+    <p>
+        申し訳ありません。問題が発生しました。
+        時間をおいて再度お試しください。
+        直らない場合、お手数ですが以下の連絡先へ連絡をお願い致します。
+    </p>
+
+    {% if logged_in %}
+        <a href="/ui/logs" class="btn">My Logsへ戻る</a>
+    {% else %}
+        <a href="/ui/login" class="btn">ログインページへ</a>
+    {% endif %}
+
+</div>
+{% endblock %}
