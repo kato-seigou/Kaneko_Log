@@ -271,7 +271,7 @@ def create_discography(db: Session, discography: schemas.DiscographyCreate):
             discography_type = discography.discography_type,
             released_date = discography.released_date,
             playtime_seconds = discography.playtime_seconds,
-            discography_link = discography.discography_link
+            discography_link = str(discography.discography_link)
         )
         db.add(db_discography)
         db.commit()
@@ -382,7 +382,7 @@ def update_discography(db: Session, discography_id: int, disco_update: schemas.D
     if disco_update.playtime_seconds is not None:
         disco.playtime_seconds = disco_update.playtime_seconds
     if disco_update.discography_link is not None:
-        disco.discography_link = disco_update.discography_link
+        disco.discography_link = str(disco_update.discography_link)
 
     db.commit()
     db.refresh(disco)

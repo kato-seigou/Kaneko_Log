@@ -100,7 +100,7 @@ def edit_discography_page(
     db: Session = Depends(get_db),
     admin_user: models.User = Depends(require_admin_from_cookie)
 ):  
-    print("HIT ui/discographies.py edit_discography_page", discography_id)
+    # print("HIT ui/discographies.py edit_discography_page", discography_id)
 
     discography = crud.get_discography(db=db, discography_id=discography_id)
     if discography is None:

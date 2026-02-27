@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, HttpUrl
 from typing import Optional
 
 # FastAPI側のデータ構造を定義する
@@ -49,7 +49,7 @@ class DiscographyCreate(BaseModel):
     discography_type: DiscographyType
     released_date: datetime.date
     playtime_seconds: Optional[int] = Field(default=None, ge=1)
-    discography_link: Optional[str] = None
+    discography_link: HttpUrl | None = None
     
 class DiscographyUpdate(BaseModel):
     discography_title: Optional[str] = Field(default=None, min_length=1)
@@ -57,7 +57,7 @@ class DiscographyUpdate(BaseModel):
     discography_type: Optional[DiscographyType] = None
     released_date: Optional[datetime.date] = None
     playtime_seconds: Optional[int] = Field(default=None, ge=1)
-    discography_link: Optional[str] = None
+    discography_link: HttpUrl | None = None
 
 class DiscographyRead(DiscographyCreate):
     discography_id: int
