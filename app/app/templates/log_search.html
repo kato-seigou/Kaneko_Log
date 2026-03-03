@@ -64,16 +64,8 @@
     <div class="before"> <!-- 前へボタンがあるとき -->
         {% if skip > 0 %}
             <a class="pager__btn"
-            href="/logs/search?skip={{ skip - limit }}&limit={{ limit }}
-            {% if start_period %}&start_period={{ start_period }}{% endif %}
-            {% if end_period %}&end_period={{ end_period }}{% endif %}
-            {% if search_title %}
-                {% for t in search_title %}&search_title={{ t|urlencode }}{% endfor %}
-            {% endif %}
-            {% if search_type %}
-                {% for tp in search_type %}&search_type={{ tp|urlencode }}{% endfor %}
-            {% endif %}
-            ">
+            href="/logs/search?skip={{ skip - limit }}&limit={{ limit }}{% if start_period %}&start_period={{ start_period }}{% endif %}{% if end_period %}&end_period={{ end_period }}{% endif %}{% if search_title %}{% for t in search_title %}&search_title={{ t|urlencode }}{% endfor %}{% endif %}{% if search_type %}{% for tp in search_type %}&search_type={{ tp|urlencode }}{% endfor %}{% endif %}"
+            >
             前へ
             </a>
         {% endif %}
@@ -82,16 +74,8 @@
     <div class="next">
         {% if has_next %} <!-- 次へボタンがあるとき -->
             <a class="pager__btn"
-            href="/logs/search?skip={{ skip + limit }}&limit={{ limit }}
-            {% if start_period %}&start_period={{ start_period }}{% endif %}
-            {% if end_period %}&end_period={{ end_period }}{% endif %}
-            {% if search_title %}
-                {% for t in search_title %}&search_title={{ t|urlencode }}{% endfor %}
-            {% endif %}
-            {% if search_type %}
-                {% for tp in search_type %}&search_type={{ tp|urlencode }}{% endfor %}
-            {% endif %}
-            ">
+            href="/logs/search?skip={{ skip + limit }}&limit={{ limit }}{% if start_period %}&start_period={{ start_period }}{% endif %}{% if end_period %}&end_period={{ end_period }}{% endif %}{% if search_title %}{% for t in search_title %}&search_title={{ t|urlencode }}{% endfor %}{% endif %}{% if search_type %}{% for tp in search_type %}&search_type={{ tp|urlencode }}{% endfor %}{% endif %}"
+            >
             次へ
             </a>
         {% endif %}
@@ -136,7 +120,7 @@
                 <div class="scroll-box">
                     {% for d in discographies %}
                         <label class="check">
-                            <input type="checkbox" name="search_title" value="{{ d.discography_title}}">
+                            <input type="checkbox" name="search_title" value="{{ d.discography_title }}">
                             <span>{{ d.discography_title }}</span>
                         </label>
                     {% endfor %}

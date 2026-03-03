@@ -1,5 +1,5 @@
 from typing import Optional, List
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session , joinedload
 from sqlalchemy.exc import IntegrityError
@@ -58,7 +58,7 @@ def search_logs(
     if start_period:
         q = q.filter(models.ListenLog.listened_at >= start_period)
     if end_period:
-        q = q.filter(models.ListenLog.listened_at <= end_period)  
+        q = q.filter(models.ListenLog.listened_at < (end_period + timedelta(days=1)))
     if search_title:
         q = q.filter(models.Discography.discography_title.in_(search_title))
     if search_type:

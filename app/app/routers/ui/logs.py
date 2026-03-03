@@ -54,7 +54,7 @@ def search_logs_page(
     search_title: List[str] | None = Query(None),
     search_type: List[str] | None = Query(None),
     skip: int = Query(0),
-    limit: int = Query(2),
+    limit: int = Query(10),
 ):
     if current_user is None:
         resp = RedirectResponse(url="/login", status_code=303)
