@@ -59,7 +59,7 @@ app.include_router(ui_stats.router)
 def home_page(request: Request):
     token = request.cookies.get(auth.COOKIE_NAME)
     if token:
-        return RedirectResponse(url="/ui/logs", status_code=303)
+        return RedirectResponse(url="/logs", status_code=303)
     return render(
         request=request,
         name="home.html",

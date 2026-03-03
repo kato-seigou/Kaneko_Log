@@ -14,7 +14,7 @@
   <p style="color:red;">{{ error }}</p>
 {% endif %}
 
-<form method="post" class="form" action="/ui/logs/{{ log.log_id }}/edit">
+<form method="post" class="form" action="/logs/{{ log.log_id }}/edit">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <div class="form-group">
     <label>ディスコグラフィ</label>
@@ -48,14 +48,14 @@
   </div>
 </form>
 
-<form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+<form method="post" action="/logs/{{ log.log_id }}/delete"
       onsubmit="return confirm('このログを削除します。よろしいですか？');">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <button type="submit" class="btn-primary-delete">削除</button>
 </form>
 
 <p style="margin-top:12px;">
-  <a href="/ui/logs">戻る</a>
+  <a href="/logs">戻る</a>
 </p>
 
 {% endblock %}

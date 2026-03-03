@@ -11,7 +11,7 @@
     <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
 </header>
 
-<form method="post" class="form" action="/ui/logs/new">
+<form method="post" class="form" action="/logs/new">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <div class="form-group">
@@ -41,6 +41,6 @@
     </div>
 </form>
 <p style="margin-top:12px;">
-    <a href="/ui/logs">ログ一覧へ戻る</a>
+    <a href="/logs">ログ一覧へ戻る</a>
 </p>
 {% endblock %}

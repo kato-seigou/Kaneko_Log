@@ -59,7 +59,7 @@ def login_action(
     # JWT発行
     token = security.create_access_token(data = {"sub": str(user.user_id)})
     
-    response = RedirectResponse(url="/ui/logs", status_code=303)
+    response = RedirectResponse(url="/logs", status_code=303)
     response.set_cookie(
         key=COOKIE_NAME,
         value=token,

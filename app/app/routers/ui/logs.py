@@ -15,9 +15,9 @@ from ._render import render
 from ._csrf import ensure_csrf_token, validate_csrf
 from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 
-router = APIRouter(prefix="/ui", tags=["ui"])
+router = APIRouter(prefix="/logs", tags=["ui"])
 
-@router.get("/logs")
+@router.get("")
 def logs_page(
     request: Request,
     db: Session = Depends(get_db),
@@ -44,7 +44,7 @@ def logs_page(
         context={"user": current_user, "logs": logs, "skip": skip, "limit": limit, "has_next": has_next}
     )
 
-@router.get("/logs/search")
+@router.get("/search")
 def search_logs_page(
     request: Request,
     db: Session = Depends(get_db),
@@ -80,6 +80,9 @@ def search_logs_page(
     has_next = len(log_plus) > limit
     logs = log_plus[:limit]
     
+    print("start_period", start_period)
+    print("end_period", end_period)
+    
     return render(
         request=request,
         name="log_search.html",
@@ -99,7 +102,7 @@ def search_logs_page(
         },
     )
 
-@router.get("/logs/new")
+@router.get("/new")
 def new_log_page(
     request: Request,
     db: Session = Depends(get_db),
@@ -117,7 +120,7 @@ def new_log_page(
         }
     )
     
-@router.get("/logs/{log_id}/edit")
+@router.get("/{log_id}/edit")
 def edit_log_page(
     log_id: int,
     request: Request,
@@ -138,7 +141,7 @@ def edit_log_page(
         }
     )
     
-@router.post("/logs/new")
+@router.post("/new")
 def create_log_action(
     request: Request,
     current_user: models.User = Depends(get_current_user_from_cookie),
@@ -161,17 +164,17 @@ def create_log_action(
         )
     except Exception:
         return redirect_with_flash(
-            "/ui/logs",
+            "/logs",
             "ログの作成に失敗しました。",
             level=FLASH_ERROR
         )
     return redirect_with_flash(
-        "/ui/logs",
+        "/logs",
         "ログを追加しました。",
         level=FLASH_SUCCESS
     )
     
-@router.post("/logs/{log_id}/edit")
+@router.post("/{log_id}/edit")
 def edit_log_action(
     log_id: int,
     request: Request,
@@ -198,12 +201,12 @@ def edit_log_action(
     )
     # return RedirectResponse(url="/ui/logs", status_code=303)
     return redirect_with_flash(
-        url="/ui/logs",
+        url="/logs",
         message="ログを編集しました",
         level=FLASH_SUCCESS
     )
 
-@router.post("/logs/{log_id}/delete")
+@router.post("/{log_id}/delete")
 def delete_log_action(
     log_id: int,
     request: Request,
@@ -216,7 +219,7 @@ def delete_log_action(
     crud.delete_log(db=db, user_id=current_user.user_id, log_id=log_id)
     # return RedirectResponse(url="/ui/logs", status_code=303)
     return redirect_with_flash(
-        url="/ui/logs",
+        url="/logs",
         message="ログを削除しました",
         level=FLASH_ERROR
     )

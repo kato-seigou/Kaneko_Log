@@ -26,11 +26,11 @@
                     </span>
 
                     <div class="log-action">
-                        <form method="get" action="/ui/logs/{{ log.log_id }}/edit">
+                        <form method="get" action="/logs/{{ log.log_id }}/edit">
                         <button type="submit" class="action-btn">編集</button>
                         </form>
 
-                        <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+                        <form method="post" action="/logs/{{ log.log_id }}/delete"
                         onsubmit="return confirm('このログを削除します。よろしいですか？')">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                         <button type="submit" class="action-btn action-btn--danger">削除</button>
@@ -64,7 +64,7 @@
     <div class="before"> <!-- 前へボタンがあるとき -->
         {% if skip > 0 %}
             <a class="pager__btn"
-            href="/ui/logs/search?skip={{ skip - limit }}&limit={{ limit }}
+            href="/logs/search?skip={{ skip - limit }}&limit={{ limit }}
             {% if start_period %}&start_period={{ start_period }}{% endif %}
             {% if end_period %}&end_period={{ end_period }}{% endif %}
             {% if search_title %}
@@ -82,7 +82,7 @@
     <div class="next">
         {% if has_next %} <!-- 次へボタンがあるとき -->
             <a class="pager__btn"
-            href="/ui/logs/search?skip={{ skip + limit }}&limit={{ limit }}
+            href="/logs/search?skip={{ skip + limit }}&limit={{ limit }}
             {% if start_period %}&start_period={{ start_period }}{% endif %}
             {% if end_period %}&end_period={{ end_period }}{% endif %}
             {% if search_title %}
@@ -100,7 +100,7 @@
 </div>
 
 <dialog id="searchDialog" class="dialog">
-    <form method="get" action="/ui/logs/search" class="dialog__form"
+    <form method="get" action="/logs/search" class="dialog__form"
         >
         <div class="dialog__header">
             <h2 class="dialog__title">ログ検索</h2>

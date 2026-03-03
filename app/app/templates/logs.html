@@ -13,7 +13,7 @@
 <p>ログイン中: {{ user.display_name }} @{{ user.login_id }}</p>
 
 <p style="margin-top:12px;">
-  <a href="/ui/logs/new">新規ログ作成へ</a>
+  <a href="/logs/new">新規ログ作成へ</a>
 </p>
 
 <div class="log-container">
@@ -31,11 +31,11 @@
           </span>
 
           <div class="log-action">
-            <form method="get" action="/ui/logs/{{ log.log_id }}/edit">
+            <form method="get" action="/logs/{{ log.log_id }}/edit">
               <button type="submit" class="action-btn">編集</button>
             </form>
 
-            <form method="post" action="/ui/logs/{{ log.log_id }}/delete"
+            <form method="post" action="/logs/{{ log.log_id }}/delete"
               onsubmit="return confirm('このログを削除します。よろしいですか？')">
               <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
               <button type="submit" class="action-btn action-btn--danger">削除</button>
@@ -76,13 +76,13 @@
   <!-- ログがn件を超える場合に、ページングできるようにする -->
   <div class="before">
     {% if skip > 0 %}
-      <a href="/ui/logs?skip={{ [skip - limit, 0] | max }}&limit={{ limit }}">前へ</a>
+      <a href="/logs?skip={{ [skip - limit, 0] | max }}&limit={{ limit }}">前へ</a>
     {% endif %}
   </div>
 
   <div class="next">
     {% if has_next %}
-      <a href="/ui/logs?skip={{ skip + limit }}&limit={{ limit }}">次へ</a>
+      <a href="/logs?skip={{ skip + limit }}&limit={{ limit }}">次へ</a>
     {% endif %}
   </div>
 
