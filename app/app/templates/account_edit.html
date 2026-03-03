@@ -17,7 +17,7 @@
 <p>ログイン中: {{ user.display_name }} @{{ user.login_id }}</p>
 
 <!-- プロフィール更新 -->
-<form method="post" class="auth-form" action="/ui/account/profile">
+<form method="post" class="auth-form" action="/account/profile">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
     <div class="form-group">
@@ -37,7 +37,7 @@
 </form>
 
 <!-- パスワード更新 -->
-<form method="post" class="auth-form" action="/ui/account/password" style="margin-top: 24px";>
+<form method="post" class="auth-form" action="/account/password" style="margin-top: 24px";>
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <div class="form-group">
@@ -70,7 +70,7 @@
 </form>
 
 <p style="margin-top:12px;">
-    <a href="/ui/logs">ログ一覧へ戻る</a>
+    <a href="/logs">ログ一覧へ戻る</a>
 </p>
 
 <script>

@@ -16,14 +16,14 @@ from ._render import render
 from ._csrf import validate_csrf
 from .auth import COOKIE_NAME
 
-router = APIRouter(prefix="/ui", tags=["ui"])
+router = APIRouter(prefix="/account", tags=["ui"])
 
 logger = logging.getLogger(__name__)
 
 # ユーザー取得はget_current_user_from_cookieで可
 
 # アカウント編集ページ表示
-@router.get("/account/edit")
+@router.get("/edit")
 def account_edit_page(
     request: Request,
     current_user: models.User | None = Depends(get_current_user_from_cookie_optional)
@@ -38,7 +38,7 @@ def account_edit_page(
     )
 
 # プロフィール更新アクション
-@router.post("/account/profile")
+@router.post("/profile")
 def account_profile_update_action(
     request: Request,
     db: Session = Depends(get_db),
@@ -79,13 +79,13 @@ def account_profile_update_action(
         )
         
     return redirect_with_flash(
-        url="/ui/account/edit",
+        url="/account/edit",
         message="プロフィールを更新しました",
         level=FLASH_SUCCESS
     )
     
 # パスワード更新
-@router.post("/account/password")
+@router.post("/password")
 def account_password_update_action(
     request: Request,
     db: Session = Depends(get_db),
