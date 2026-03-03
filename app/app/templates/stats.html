@@ -8,7 +8,7 @@
 
 {% block content %}
 <header class="page-header">
-    <h1 class="page-title">Your Log</h1>
+    <h1 class="page-title">Log Stats</h1>
     <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
 </header>
 
@@ -40,7 +40,7 @@
 </section>
 
 <section class="stats-section">
-    <h2 class="section-title">Discography Plays</h2>
+    <h2 class="section-title">All-Times Plays</h2>
 
     {% if play_counts %}
         <!--棒グラフ全体を囲むwrap-->
@@ -101,7 +101,7 @@
 <section class="stats-section">
     {% if play_counts %}
         <div>
-            <h2>Monthly Log</h2>
+            <h2>Monthly Plays</h2>
 
             <div class="monthly-controls">
                 <input id="monthPicker" type="month" min="2012-05" value="{{ year }}-{{ '%02d'|format(month) }}">

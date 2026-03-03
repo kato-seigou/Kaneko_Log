@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}新規ログ作成{% endblock %}
+{% block title %}Add Log{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', path='css/logs.css') }}">
@@ -7,7 +7,7 @@
 
 {% block content %} 
 <header class="page-header">
-    <h1 class="page-title">新規ログ作成</h1>
+    <h1 class="page-title">Add Log</h1>
     <button id="sidebarToggle" class="toggle-btn" type="button">☰</button>
 </header>
 
@@ -15,7 +15,7 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <div class="form-group">
-        <label>discography title</label>
+        <label>ディスコグラフィ</label>
         <select name="discography_id" required>
             <option value="">選択してください</option>
             {% for d in discographies %}
@@ -27,12 +27,12 @@
     </div>
 
     <div class="form-group">
-        <label>listened_at</label>
+        <label>聴いた日時</label>
         <input type="datetime-local" name="listened_at" required/>
     </div>
 
     <div class="form-group">
-        <label>comment</label>
+        <label>コメント（任意）</label>
         <textarea name="comment" rows="3" maxlength="50"></textarea>
     </div>
 
@@ -41,6 +41,6 @@
     </div>
 </form>
 <p style="margin-top:12px;">
-    <a href="/ui/logs">一覧へ戻る</a>
+    <a href="/ui/logs">ログ一覧へ戻る</a>
 </p>
 {% endblock %}
