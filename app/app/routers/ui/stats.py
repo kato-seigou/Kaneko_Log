@@ -25,7 +25,7 @@ def stats_page(
     current_user: models.User = Depends(get_current_user_from_cookie_optional)
 ):
     if current_user is None:
-        resp = RedirectResponse(url="/ui/login", status_code=303)
+        resp = RedirectResponse(url="/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
     # KPI
@@ -71,7 +71,7 @@ def stats_monthly_partial(
     current_user: models.User = Depends(get_current_user_from_cookie_optional)
 ):
     if current_user is None:
-        resp = RedirectResponse(url="/ui/login", status_code=303)
+        resp = RedirectResponse(url="/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
     monthly_counts = crud.get_monthly_discography_counts(

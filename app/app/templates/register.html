@@ -14,7 +14,7 @@
   <p style="color:red;">{{ error }}</p>
 {% endif %}
 
-<form method="post" class="auth-form" action="/ui/register">
+<form method="post" class="auth-form" action="/register">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
   <div class="form-group">
@@ -48,7 +48,7 @@
   </div>
 
 </form>
-<p style="margin-top:12px;"><a href="/ui/login">ログインへ戻る</a></p>
+<p style="margin-top:12px;"><a href="/login">ログインへ戻る</a></p>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

@@ -7,13 +7,13 @@ from .auth import COOKIE_NAME
 from ._render import render
 from ._deps import get_current_user_from_cookie
 
-router = APIRouter(prefix="/ui", tags=["ui"])
+router = APIRouter(prefix="", tags=["ui"])
 
 @router.get("/")
 def home_page(request: Request):
     try: 
         user = get_current_user_from_cookie(request)
-        return RedirectResponse(url="/ui/logs", status_code=303)
+        return RedirectResponse(url="/logs", status_code=303)
     except HTTPException:
         pass
     

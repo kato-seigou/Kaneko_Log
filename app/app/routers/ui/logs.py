@@ -27,7 +27,7 @@ def logs_page(
 ):
     
     if current_user is None:
-        resp = RedirectResponse(url="/ui/login", status_code=303)
+        resp = RedirectResponse(url="/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
     logs_plus = crud.get_logs(
@@ -57,7 +57,7 @@ def search_logs_page(
     limit: int = Query(2),
 ):
     if current_user is None:
-        resp = RedirectResponse(url="/ui/login", status_code=303)
+        resp = RedirectResponse(url="/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
     discographies = crud.get_discographies(db=db)

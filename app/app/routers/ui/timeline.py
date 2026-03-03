@@ -19,7 +19,7 @@ def timeline_page(
     limit: int = 10
 ):
     if current_user is None:
-        resp = RedirectResponse(url="/ui/login", status_code=303)
+        resp = RedirectResponse(url="/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
     log_plus = crud.get_timeline_logs(db=db, skip=skip, limit=limit + 1)

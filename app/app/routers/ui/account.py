@@ -29,7 +29,7 @@ def account_edit_page(
     current_user: models.User | None = Depends(get_current_user_from_cookie_optional)
 ):
     if current_user is None:
-        return RedirectResponse(url="/ui/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)
         
     return render(
         request=request,
@@ -48,7 +48,7 @@ def account_profile_update_action(
     current_user: models.User | None = Depends(get_current_user_from_cookie_optional)
 ):
     if current_user is None:
-        return RedirectResponse(url="/ui/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)
     
     validate_csrf(request, csrf_token)
     
@@ -96,7 +96,7 @@ def account_password_update_action(
     current_user: models.User | None = Depends(get_current_user_from_cookie_optional)
 ):
     if current_user is None:
-        return RedirectResponse(url="/ui/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)
     
     validate_csrf(request, csrf_token)
     
@@ -142,7 +142,7 @@ def account_password_update_action(
             status_code=500,
         )
     
-    response = RedirectResponse(url="/ui/login", status_code=303)
+    response = RedirectResponse(url="/login", status_code=303)
     response.delete_cookie(COOKIE_NAME, path="/")
     return add_flash(
         response=response,

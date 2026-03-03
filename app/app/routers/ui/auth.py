@@ -13,7 +13,7 @@ from ._csrf import ensure_csrf_token, validate_csrf
 from ...database import get_db
 from ... import crud, security, schemas, settings
 
-router = APIRouter(prefix="/ui", tags=["ui"])
+router = APIRouter(prefix="", tags=["ui"])
 
 COOKIE_NAME = "access_token"
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 def login_page(request: Request):
     token = request.cookies.get(COOKIE_NAME)
     if token:
-        return RedirectResponse(url="/ui/logs", status_code=303)
+        return RedirectResponse(url="/logs", status_code=303)
     return render(
         request=request,
         name="login.html",
@@ -74,7 +74,7 @@ def login_action(
 
 @router.get("/logout")
 def logout_action():
-    response = RedirectResponse(url="/ui/login", status_code=303)
+    response = RedirectResponse(url="/login", status_code=303)
     response.delete_cookie(COOKIE_NAME, path="/")
     return add_flash(response=response, message="ログアウトしました", level=FLASH_INFO)
 
@@ -134,4 +134,4 @@ def register_action(
         status_code=500,
     )
         
-    return RedirectResponse(url="/ui/login", status_code=303)
+    return RedirectResponse(url="/login", status_code=303)

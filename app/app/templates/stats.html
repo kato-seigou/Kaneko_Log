@@ -129,7 +129,7 @@
 
                 const res = await fetch(`/stats/monthly?year=${year}&month=${month}`);
                 if (res.status === 401) {
-                    location.href = "/ui/login";
+                    location.href = "/login";
                     return;
                 }
                 document.getElementById("monthlyArea").innerHTML = await res.text();
@@ -152,7 +152,7 @@
 
         const res = await fetch("/stats/pie");
         if (res.status === 401) {
-            location.href = "/ui/login";
+            location.href = "/login";
             return;
         }
         const json = await res.json();

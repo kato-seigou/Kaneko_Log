@@ -27,7 +27,7 @@ def discographies_page(
     user: models.User | None = Depends(get_current_user_from_cookie_optional)
 ):
     if user is None:
-        resp = RedirectResponse(url="/ui/login", status_code=303)
+        resp = RedirectResponse(url="/login", status_code=303)
         return add_flash(resp, "ログインしてください", level=FLASH_INFO)
     
     discographies = crud.get_discographies(db=db)
