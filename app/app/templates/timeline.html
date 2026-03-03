@@ -43,7 +43,7 @@
 
   {% if has_more %}
     <div style="text-align: center; margin: 16px 0;">
-      <a href="/ui/timeline?skip={{ next_skip }}&limit={{ limit }}"
+      <a href="/timeline?skip={{ next_skip }}&limit={{ limit }}"
         style="display: inline-block; padding: 10px 14px; border: 1px solid #ddd; border-radius: 999px; text-decoration: none;">
         もっと見る
       </a>
@@ -53,13 +53,13 @@
   <!-- ログがn件を超える場合に、ページングできるようにする -->
   <div class="before">
     {% if skip > 0 %}
-      <a href="/ui/timeline?skip={{ [skip - limit, 0] | max }}&limit={{ limit }}">前へ</a>
+      <a href="/timeline?skip={{ [skip - limit, 0] | max }}&limit={{ limit }}">前へ</a>
     {% endif %}
   </div>
 
   <div class="next">
     {% if has_next %}
-      <a href="/ui/timeline?skip={{ skip + limit }}&limit={{ limit }}">次へ</a>
+      <a href="/timeline?skip={{ skip + limit }}&limit={{ limit }}">次へ</a>
     {% endif %}
   </div>
 
