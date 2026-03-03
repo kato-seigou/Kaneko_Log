@@ -19,11 +19,11 @@
 {% if discography is none %}
   <p>編集対象が見つかりません。</p>
   <p style="margin-top:12px;">
-    <a href="/ui/discographies">一覧へ戻る</a>
+    <a href="/discographies">一覧へ戻る</a>
   </p>
 {% else %}
 
-<form method="post" class="form" action="/ui/discographies/{{ discography.discography_id }}/edit">
+<form method="post" class="form" action="/discographies/{{ discography.discography_id }}/edit">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <div class="form-group">
     <label>タイトル</label>
@@ -81,7 +81,7 @@
   {% if user and user.is_admin %}
       <form
       method="post"
-      action="/ui/discographies/{{ discography.discography_id }}/delete"
+      action="/discographies/{{ discography.discography_id }}/delete"
       onsubmit="return confirm('本当に削除しますか？');"
       >
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
@@ -92,7 +92,7 @@
   {% endif %}
 
 <p style="margin-top:12px;">
-  <a href="/ui/discographies">一覧へ戻る</a>
+  <a href="/discographies">一覧へ戻る</a>
 </p>
 
 {% endif %}

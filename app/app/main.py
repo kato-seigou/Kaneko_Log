@@ -42,9 +42,9 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 #     allow_headers=["*"]
 # )
 
-app.include_router(auth.router)
-app.include_router(discography.router)
-app.include_router(logs.router)
+# app.include_router(auth.router)
+# app.include_router(discography.router)
+# app.include_router(logs.router)
 app.include_router(ui_auth.router)
 app.include_router(ui_logs.router)
 app.include_router(ui_disco.router)

@@ -15,7 +15,7 @@
   <p style="color:red;">{{ error }}</p>
 {% endif %}
 
-<form method="post" class="form" action="/ui/discographies/new">
+<form method="post" class="form" action="/discographies/new">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <div class="form-group">
     <label>タイトル</label>
@@ -60,6 +60,6 @@
 </form>
 
 <p style="margin-top:12px;">
-  <a href="/ui/discographies">一覧へ戻る</a>
+  <a href="/discographies">一覧へ戻る</a>
 </p>
 {% endblock %}

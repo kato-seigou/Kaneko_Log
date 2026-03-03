@@ -15,12 +15,12 @@ from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, 
 from ._render import render
 from ._csrf import validate_csrf
 
-router = APIRouter(prefix="/ui", tags=["ui"])
+router = APIRouter(prefix="/discographies", tags=["ui"])
 
 logger = logging.getLogger(__name__)
 
 # ディスコグラフィ一覧表示
-@router.get("/discographies")
+@router.get("")
 def discographies_page(
     request: Request,
     db: Session = Depends(get_db),
@@ -42,7 +42,7 @@ def discographies_page(
     )
     
 # 登録画面（管理者のみ）
-@router.get("/discographies/new")
+@router.get("/new")
 def new_discography_page(
     request: Request,
     admin_user: models.User = Depends(require_admin_from_cookie)
@@ -58,7 +58,7 @@ def new_discography_page(
     )
 
 # 登録処理（管理者のみ）
-@router.post("/discographies/new")
+@router.post("/new")
 def create_discographies_action(
     request: Request,
     discography_title: str = Form(...),
@@ -89,18 +89,17 @@ def create_discographies_action(
         )
         
     return RedirectResponse(
-        url="/ui/discographies", status_code=303
+        url="/discographies", status_code=303
     )
     
 # 編集（管理者のみ）
-@router.get("/discographies/{discography_id}/edit")
+@router.get("/{discography_id}/edit")
 def edit_discography_page(
     discography_id: int,
     request: Request,
     db: Session = Depends(get_db),
     admin_user: models.User = Depends(require_admin_from_cookie)
 ):  
-    # print("HIT ui/discographies.py edit_discography_page", discography_id)
 
     discography = crud.get_discography(db=db, discography_id=discography_id)
     if discography is None:
@@ -129,7 +128,7 @@ def edit_discography_page(
     context={"discography": discography, "user": admin_user, "error": None},
     )
     
-@router.post("/discographies/{discography_id}/edit")
+@router.post("/{discography_id}/edit")
 def edit_discography_action(
     request: Request,
     discography_id: int, 
@@ -157,7 +156,7 @@ def edit_discography_action(
                 discography_link=discography_link
             )
         )
-        return RedirectResponse(url="/ui/discographies", status_code=303)
+        return RedirectResponse(url="/discographies", status_code=303)
     except Exception as e:
         discography = crud.get_discography(db=db, discography_id=discography_id)
         return templates.TemplateResponse(
@@ -170,7 +169,7 @@ def edit_discography_action(
             }
         )
         
-@router.post("/discographies/{discography_id}/delete")
+@router.post("/{discography_id}/delete")
 def delete_discography_action(
     request: Request,
     discography_id: int,
@@ -181,7 +180,7 @@ def delete_discography_action(
     validate_csrf(request, csrf_token)
     try:
         crud.delete_discography(db=db, discography_id=discography_id)
-        return RedirectResponse(url="/ui/discographies", status_code=303)
+        return RedirectResponse(url="/discographies", status_code=303)
     except Exception as e:
         discography = crud.get_discography(db=db, discography_id=discography_id)
         return templates.TemplateResponse(
