@@ -16,9 +16,9 @@ from ._render import render
 from ._csrf import ensure_csrf_token, validate_csrf
 from ._flash import redirect_with_flash, add_flash, FLASH_SUCCESS, FLASH_ERROR, FLASH_INFO
 
-router = APIRouter(prefix="/ui", tags=["ui"])
+router = APIRouter(prefix="/stats", tags=["ui"])
 
-@router.get("/stats")
+@router.get("")
 def stats_page(
     request: Request,
     db: Session = Depends(get_db),
@@ -62,7 +62,7 @@ def stats_page(
         }
     )
 
-@router.get("/stats/monthly", response_class=HTMLResponse)
+@router.get("/monthly", response_class=HTMLResponse)
 def stats_monthly_partial(
     request: Request,
     year: int,
@@ -88,7 +88,7 @@ def stats_monthly_partial(
         }
     )
 
-@router.get("/stats/pie")
+@router.get("/pie")
 def stats_pie(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user_from_cookie_optional),

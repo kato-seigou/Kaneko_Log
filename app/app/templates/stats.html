@@ -127,7 +127,7 @@
 
                 const [year, month] = value.split("-");
 
-                const res = await fetch(`/ui/stats/monthly?year=${year}&month=${month}`);
+                const res = await fetch(`/stats/monthly?year=${year}&month=${month}`);
                 if (res.status === 401) {
                     location.href = "/ui/login";
                     return;
@@ -150,7 +150,7 @@
         const canvas = document.getElementById("playsPie");
         if (!canvas) return;
 
-        const res = await fetch("/ui/stats/pie");
+        const res = await fetch("/stats/pie");
         if (res.status === 401) {
             location.href = "/ui/login";
             return;
