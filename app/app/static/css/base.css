@@ -1,7 +1,6 @@
 * { box-sizing: border-box; }
 
-/* 基本 */
-
+/* ---------------基本----------------- */
 html, body {
     height: 100%;
 }
@@ -42,15 +41,16 @@ body {
     justify-content: space-between;
     gap: 12px;
 }
+
 .page-title {
     margin: 0
 }
+
 .toggle-btn {
-    position: static;
-    top: auto;
-    right: auto;
-    left: auto;
-    margin: 0;
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    z-index: 1;
 
     font-size: 24px;
     background: none;
