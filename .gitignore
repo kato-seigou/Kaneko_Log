@@ -12,5 +12,8 @@ wheels/
 # 設計書
 01_design_documents/
 
+# データベース
+app/data/*.db
+
 # その他
 .env
