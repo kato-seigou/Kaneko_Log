@@ -1,14 +1,20 @@
+import os
 from pathlib import Path
+
 from sqlalchemy import create_engine, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import Engine
 
 # データベースのパス
-BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = BASE_DIR / "data" / "app.db"
-
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    SQLALCHEMY_DATABASE_URL = DATABASE_URL
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    DB_PATH = BASE_DIR / "data" / "app.db"
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
@@ -34,4 +40,3 @@ def get_db():
         yield db
     finally:
         db.close()
-        
