@@ -21,8 +21,9 @@
         <!-- disco card start -->
         <div class="disco-card">
             <div class="disco-header">
-
-                {% if d.discography_link is none %}
+                
+                {% set link = d.discography_link %}
+                {% if link is none or link == "" or link == "None" %}
                 <!-- リンクなしの場合はそのまま表示 -->
                 <strong>{{ d.discography_title }}</strong>
                 {% else %}

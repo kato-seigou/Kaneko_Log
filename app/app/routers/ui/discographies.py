@@ -143,6 +143,11 @@ def edit_discography_action(
     csrf_token: str = Form(...)
 ):
     validate_csrf(request, csrf_token)
+    
+    discography_link = (discography_link or "").strip()
+    discography_link = None if discography_link in ("", "None") else discography_link
+
+        
     try: 
         crud.update_discography(
             db=db, 

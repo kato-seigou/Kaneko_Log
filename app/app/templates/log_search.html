@@ -39,7 +39,8 @@
                 </div>
             
                 <div class="log-body">
-                    {% if log.discography.discography_link is none %}
+                    {% set link = log.discography.discography_link %}
+                    {% if link is none or link == "" or link == "None" %}
                     🎧 {{ log.discography.discography_title }}<br>
                     {% else %}
                     <a href="{{ log.discography.discography_link }}" target="_blank" rel="noopener noreferrer">
