@@ -10,6 +10,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED
 
 
 from .database import Base, engine
+from . import models
 from .routers.ui._render import render
 from .routers.ui._deps import get_current_user_from_cookie
 from .routers import auth, discography, logs
@@ -22,10 +23,13 @@ from .routers.ui import timeline as ui_timeline
 from .routers.ui import account as ui_account
 from .routers.ui import stats as ui_stats
 
+app = FastAPI(title="kanekoayano App API")
+
 # DBテーブル作成
 # Base.metadata.create_all(bind=engine)
-
-app = FastAPI(title="kanekoayano App API")
+@app.on_event("startup")
+def create_tables():
+    Base.metadata.create_all(bind="engine")
 
 # css
 BASE_DIR = Path(__file__).resolve().parent
