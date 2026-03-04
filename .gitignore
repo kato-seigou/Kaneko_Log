@@ -1,5 +1,6 @@
 # Python-generated files
 __pycache__/
+*.pyc
 *.py[oc]
 build/
 dist/
@@ -9,11 +10,21 @@ wheels/
 # Virtual environments
 .venv
 
-# 設計書
+# documents
 01_design_documents/
 
-# データベース
-app/data/*.db
-
-# その他
+# environment
 .env
+
+# database
+*.db
+
+# vscode
+.vscode/
+
+# venv
+.venv/
+venv/
+
+# OS
+.DS_Store
