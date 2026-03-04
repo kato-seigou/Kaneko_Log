@@ -29,7 +29,7 @@ app = FastAPI(title="kanekoayano App API")
 # Base.metadata.create_all(bind=engine)
 @app.on_event("startup")
 def create_tables():
-    Base.metadata.create_all(bind="engine")
+    Base.metadata.create_all(bind=engine)
 
 # css
 BASE_DIR = Path(__file__).resolve().parent
