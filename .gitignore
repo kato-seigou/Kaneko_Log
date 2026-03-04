@@ -28,3 +28,6 @@ venv/
 
 # OS
 .DS_Store
+
+# others
+app/app/_scripts/
