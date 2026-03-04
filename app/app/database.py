@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import Engine
 
 # データベースのパス
+# Render上でDATABASE_URLを指定
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     SQLALCHEMY_DATABASE_URL = DATABASE_URL
