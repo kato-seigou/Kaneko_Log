@@ -38,7 +38,7 @@
             <form method="post" action="/logs/{{ log.log_id }}/delete"
               onsubmit="return confirm('このログを削除します。よろしいですか？')">
               <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-              <button type="submit" class="action-btn--danger">削除</button>
+              <button type="submit" class="action-btn action-btn--danger">削除</button>
             </form>
           </div>
 

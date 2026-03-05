@@ -34,7 +34,6 @@
     appearance: none;
     font-size: 16px;
     height: 26px;
-    padding: 0 8 px;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
@@ -44,14 +43,14 @@
     border: none;
     color: #111;
     -webkit-text-fill-color: #111;
-    background: #EAE6E2;
+    background-color: #EAE6E2;
     font: inherit;
     line-height: 1;
     cursor: pointer;
 }
 
 .action-btn:hover {
-    background: #f5f5f5
+    background-color: #f5f5f5
 }
 
 /* ------------編集・追加------------ */
