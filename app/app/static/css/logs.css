@@ -164,8 +164,13 @@
     cursor: pointer;
 }
 
+.action-btn:hover {
+    background-color: #f5f5f5
+}
+
 .action-btn--danger {
     color: #be4848;
+    -webkit-text-fill-color: #be4848;
 }
 
 /* ページング */
