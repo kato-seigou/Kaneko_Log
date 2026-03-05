@@ -41,7 +41,7 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 # サイトマップ
 @app.get("/sitemap.xml")
 def sitemap():
-    return FileResponse("app/static/sitemap.xml")
+    return FileResponse("static/sitemap.xml")
 
 # app.add_middleware(
 #     CORSMiddleware,
