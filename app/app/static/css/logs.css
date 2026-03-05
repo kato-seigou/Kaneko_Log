@@ -147,15 +147,17 @@
 }
 
 .action-btn {
+    -webkit-appearance: none;
     appearance: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     height: 32px;
     padding: 0 12px;
-    border: 1px solid #fbfbfc;
+    border: none;
     border-radius: 10px;
     color: #111;
+    -webkit-text-fill-color: #111;
     background: #fbfbfc;
     font: inherit;
     line-height: 1;
