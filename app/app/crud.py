@@ -351,6 +351,8 @@ def update_log(db: Session, user_id: int, log_id: int, log_update: schemas.Liste
     
     if log_update.comment is not None:
         db_log.comment = log_update.comment
+    else:
+        db_log.comment = None
     if log_update.listened_at is not None:
         db_log.listened_at = log_update.listened_at
         
